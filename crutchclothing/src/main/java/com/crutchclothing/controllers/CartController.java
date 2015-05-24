@@ -265,13 +265,14 @@ public class CartController {
 		
 		int criteria1 = productService.findProductsBetween(0, 34.99).size();
 	    int criteria2 = productService.findProductsBetween(35, 49.99).size();
-		userService.findUser(name);
+		User user = userService.findUser(name);
 		model.addAttribute("name", capitalizeName(name));
 		Set<Product> products = productService.findCategory(categoryId).getProducts();
 		model.addAttribute("products", products);
 		model.addAttribute("categories", productService.findAllCategories());
 		model.addAttribute("crit1", criteria1);
 		model.addAttribute("crit2", criteria2);
+		model.addAttribute("cartQuan", user.getUserCart().getTotalQuantity());
 		return "products";
 	}
 	
@@ -283,11 +284,13 @@ public class CartController {
 		List<Product> products = productService.findProductsBetween(min, max);
 		int criteria1 = productService.findProductsBetween(0, 34.99).size();
 	    int criteria2 = productService.findProductsBetween(35, 49.99).size();
+	    User user = userService.findUser(name);
 		model.addAttribute("name", capitalizeName(name)); 
 		model.addAttribute("products", products);
 		model.addAttribute("categories", productService.findAllCategories());
 		model.addAttribute("crit1", criteria1);
 		model.addAttribute("crit2", criteria2);
+		model.addAttribute("cartQuan", user.getUserCart().getTotalQuantity());
 		return "products";
 	}
 	
