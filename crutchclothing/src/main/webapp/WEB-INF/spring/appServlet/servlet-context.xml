@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+
+	
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+		
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing 
+		infrastructure -->
+
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<mvc:annotation-driven/> 
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources 
+		in the /WEB-INF/views directory -->
+
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	
+ 	
+	<beans:bean id="orderController"
+				class="com.crutchclothing.controllers.OrderController">
+			<beans:property name="userService" ref="userService" />			
+	</beans:bean>
+	
+	
+	<beans:bean id="userService"
+				class="com.crutchclothing.users.service.UserService">
+		<beans:property name="userDao" ref="userDao" />
+	</beans:bean>
+	
+	<beans:bean id="cartService"
+				class="com.crutchclothing.cart.service.CartService">
+		<beans:property name="cartDao" ref="cartDao" />
+	</beans:bean>
+	
+	<beans:bean id="productService"
+				class="com.crutchclothing.products.service.ProductService">
+		<beans:property name="productDao" ref="productDao" />
+	</beans:bean>
+	
+	
+	<beans:bean id="addressValidator"
+				class="com.crutchclothing.validation.validators.AddressValidator">			
+	</beans:bean>
+	
+	<beans:bean id="userValidator"
+				class="com.crutchclothing.validation.validators.UserValidator">
+		<beans:property name="addressValidator" ref="addressValidator" />	
+		<beans:property name="userService" ref="userService" />		
+	</beans:bean>
+	
+	<beans:bean id="productDetailValidator"
+				class="com.crutchclothing.validation.validators.ProductDetailValidator">
+	</beans:bean>
+	
+		<beans:bean id="homeController"
+				class="com.crutchclothing.controllers.HomeController">
+			<beans:property name="userService" ref="userService" />			
+	</beans:bean>
+	
+	<beans:bean id="cartController"
+				class="com.crutchclothing.controllers.CartController">
+			<beans:property name="userService" ref="userService" />
+			<beans:property name="cartService" ref="cartService" />
+			<beans:property name="productService" ref="productService" />
+			<beans:property name="validator" ref="productDetailValidator" />			
+	</beans:bean>
+	
+	<mvc:resources mapping="/resources/**" location="/resources/crutch_resources/" />
+
+	<context:component-scan base-package="com.crutchclothing.*" /> 
+	
+	
+
+</beans:beans>
