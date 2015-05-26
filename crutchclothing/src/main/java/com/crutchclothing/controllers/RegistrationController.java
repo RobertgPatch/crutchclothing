@@ -1,6 +1,8 @@
 package com.crutchclothing.controllers;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,6 +30,7 @@ import com.crutchclothing.cart.model.Cart;
 import com.crutchclothing.users.model.Address;
 import com.crutchclothing.users.model.User;
 import com.crutchclothing.users.service.UserService;
+import com.crutchclothing.util.CrutchUtils;
 
 
 @Controller
@@ -76,8 +79,9 @@ public class RegistrationController {
         	user.setPassword(passwordEncoder.encode(user.getPassword()));
         	Cart cart = new Cart();
         	//user.setCart(cart);
+        	formatUser(user);
             userService.addUser(user);
-            model.addAttribute("name", capitalizeName(user.getFirstName()));
+            model.addAttribute("name", CrutchUtils.capitalizeName(user.getFirstName()));
             //userService.saveAddress(address);
             //authenticateUserAndSetSession(user, request);
             return "registrationsuccess";
@@ -99,10 +103,19 @@ public class RegistrationController {
         SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
     }
 	
-	private String capitalizeName(String name) {
-		String formattedName = name.substring(0,1).toUpperCase() + name.substring(1, name.length()).toLowerCase();
-		return formattedName;
+	private void formatUser(User user) {
+		String firstName = user.getFirstName();
+		String lastName = user.getLastName();
+		
+		user.setFirstName(CrutchUtils.capitalizeName(firstName));
+		user.setLastName(CrutchUtils.capitalizeName(lastName));
+		
+		//capitalizeAddress()
 	}
+	
+	
+	
+	
 	
 	private void setAuthenticationManager(AuthenticationManager authenticationManager) {
 		this.authenticationManager = authenticationManager;

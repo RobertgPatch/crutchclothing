@@ -75,7 +75,7 @@ public class OrderController {
 			model.addAttribute("addressList", user.getAddresses());
 			model.addAttribute("subtotal", cart.getTotal());
 	   }
-	   
+
 	   return "checkout";
 	}
 

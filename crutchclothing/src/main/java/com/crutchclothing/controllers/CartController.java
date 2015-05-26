@@ -166,29 +166,41 @@ public class CartController {
 		String view = null;
 		User user = null;
 		Product product = null;
+		user = userService.findUser(name);
+		product = productService.findProduct(productId);
+		model.addAttribute("id", productId);
+    	model.addAttribute("user", user); 
+    	model.addAttribute("name", capitalizeName(user.getUsername()));
+    	model.addAttribute("product", productService.findProduct(productId));
+    	model.addAttribute("productDetail", new ProductDetail());
+    	model.addAttribute("cartQuan", user.getUserCart().getTotalQuantity());
+    	model.addAttribute("org.springframework.validation.BindingResult.productDetail", result);
 		if(result.hasErrors()) {
-			user = userService.findUser(name);
-			product = productService.findProduct(productId);
+			//user = userService.findUser(name);
+			//product = productService.findProduct(productId);
 			//redir.addFlashAttribute("org.springframework.validation.BindingResult.productDetail", result);
         	
+			/*
 			redir.addFlashAttribute("id", productId);
         	redir.addFlashAttribute("user", user); 
         	redir.addFlashAttribute("name", capitalizeName(user.getUsername()));
         	redir.addFlashAttribute("product", productService.findProduct(productId));
         	redir.addFlashAttribute("productDetail", productDetail); 
         	redir.addFlashAttribute("cartQuan", user.getUserCart().getTotalQuantity()); 
+			*/
 			//model.addAttribute("org.springframework.validation.BindingResult.productDetail", result);
         	//model.addAttribute("id", productId);
         	//model.addAttribute("user", user); 
         	//model.addAttribute("name", capitalizeName(user.getUsername()));
         	//model.addAttribute("product", productService.findProduct(productId));
         	//model.addAttribute("productDetail", new ProductDetail());
+        	//model.addAttribute("cartQuan", user.getUserCart().getTotalQuantity());
         	//Map<String, Object> map = new HashMap<>();
         	//map.put(", value)
         	//copyErrorsToFlash(model, redir);
         	//return showProduct(productId, model, auth);
         	//view = "redirect:/product";
-			return "redirect:/product";
+			return "product";
         }
 		else {
 			if(!name.equalsIgnoreCase("anonymoususer")) {
@@ -227,7 +239,7 @@ public class CartController {
 					cartService.saveDetailToCartProduct(cartProduct.getCartProductId(),
 							foundProductDetail);
 				}
-				view = "redirect:/cart";
+				view = "cart";
 			}
 		}
 

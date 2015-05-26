@@ -22,7 +22,46 @@
 		<script src="<c:url value="/resources/js/jquery-1.4.2.min.js" />"></script>
 		<script src="<c:url value="/resources/js/css3-mediaqueries.js" />"></script>
 		<script src="<c:url value="/resources/js/jquery-ui.min.js" />"></script>
-		<script src="<c:url value="/resources/js/fwslider.js" />"></script>
+		<script src="<c:url value="/resources/js/fwslider.js" />"></script>		
+    	<script src="<c:url value="/resources/js/jquery-1.9.1.min.js" />"></script>
+
+		<script src="<c:url value="/resources/" />"></script>
+		
+		<script src="<c:url value="/resources/js/jquery-migrate-1.0.0.min.js" />"></script>
+		<script src="<c:url value="/resources/js/jquery-ui-1.10.0.custom.min.js" />"></script>
+		<script src="<c:url value="/resources/js/jquery.ui.touch-punch.js" />"></script>
+		<script src="<c:url value="/resources/js/modernizr.js" />"></script>
+		<script src="<c:url value="/resources/js/bootstrap.min.js" />"></script>
+		<script src="<c:url value="/resources/js/jquery.cookie.js" />"></script>
+		<script src="<c:url value="/resources/js/fullcalendar.min.js" />"></script>
+		<script src="<c:url value="/resources/js/jquery.dataTables.min.js" />"></script>
+		<script src="<c:url value="/resources/js/excanvas.js" />"></script>
+		<script src="<c:url value="/resources/js/jquery.flot.js" />"></script>
+		<script src="<c:url value="/resources/js/jquery.flot.pie.js" />"></script>
+		<script src="<c:url value="/resources/js/jquery.flot.stack.js" />"></script>
+		<script src="<c:url value="/resources/js/jquery.flot.resize.min.js" />"></script>
+		<script src="<c:url value="/resources/js/jquery.chosen.min.js" />"></script>
+		<script src="<c:url value="/resources/js/jquery.uniform.min.js" />"></script>
+		<script src="<c:url value="/resources/js/jquery.cleditor.min.js" />"></script>
+		<script src="<c:url value="/resources/js/jquery.noty.js" />"></script>
+		<script src="<c:url value="/resources/js/jquery.elfinder.min.js" />"></script>
+		<script src="<c:url value="/resources/js/jquery.raty.min.js" />"></script>
+		<script src="<c:url value="/resources/js/jquery.iphone.toggle.js" />"></script>
+		<script src="<c:url value="/resources/js/jquery.uploadify-3.1.min.js" />"></script>
+		<script src="<c:url value="/resources/js/jquery.gritter.min.js" />"></script>
+		<script src="<c:url value="/resources/js/jquery.imagesloaded.js" />"></script>
+		<script src="<c:url value="/resources/js/jquery.masonry.min.js" />"></script>
+		<script src="<c:url value="/resources/js/jquery.knob.modified.js" />"></script>
+		<script src="<c:url value="/resources/js/jquery.sparkline.min.js" />"></script>
+		<script src="<c:url value="/resources/js/counter.js" />"></script>
+		<script src="<c:url value="/resources/js/retina.js" />"></script>
+		<script src="<c:url value="/resources/js/custom.js" />"></script>
+		
+
+
+
+    
+    </script>
 	<!--end slider -->
 	
 	
@@ -265,15 +304,15 @@
 						  <tbody>
 						  <c:forEach var="member" items="${users}">
 							<tr>
-								<td>${member.firstName} ${member.lastName}</td>
+								<td class="center">${member.username}</td>
 								<td class="center">${member.memberSince}</td>
 								<td class="center">${member.topRole}</td>
 								<td class="center">
 									<span class="label label-success">Active</span>
 								</td>
 								<td class="center">
-
-									
+								
+									<a href="#" ><span class="label label-danger">Remove</span></a>
 									
 								</td>
 							</tr>
@@ -340,66 +379,7 @@
 		</div>
 	</div>
 </div>
-    </body>
     
-    <script>
     
-
-	<script src="/resources/js/jquery-1.9.1.min.js"></script>
-<script src="js/jquery-migrate-1.0.0.min.js"></script>
-
-	<script src="/resources/js/jquery-ui-1.10.0.custom.min.js"></script>
-
-	<script src="/resources/js/jquery.ui.touch-punch.js"></script>
-
-	<script src="/resources/js/modernizr.js"></script>
-
-	<script src="/resources/js/bootstrap.min.js"></script>
-
-	<script src="/resources/js/jquery.cookie.js"></script>
-
-	<script src='/resources/js/fullcalendar.min.js'></script>
-
-	<script src='js/jquery.dataTables.min.js'></script>
-
-	<script src="js/excanvas.js"></script>
-<script src="js/jquery.flot.js"></script>
-<script src="js/jquery.flot.pie.js"></script>
-<script src="js/jquery.flot.stack.js"></script>
-<script src="js/jquery.flot.resize.min.js"></script>
-
-	<script src="js/jquery.chosen.min.js"></script>
-
-	<script src="js/jquery.uniform.min.js"></script>
-	
-	<script src="js/jquery.cleditor.min.js"></script>
-
-	<script src="js/jquery.noty.js"></script>
-
-	<script src="js/jquery.elfinder.min.js"></script>
-
-	<script src="js/jquery.raty.min.js"></script>
-
-	<script src="js/jquery.iphone.toggle.js"></script>
-
-	<script src="js/jquery.uploadify-3.1.min.js"></script>
-
-	<script src="js/jquery.gritter.min.js"></script>
-
-	<script src="js/jquery.imagesloaded.js"></script>
-
-	<script src="js/jquery.masonry.min.js"></script>
-
-	<script src="js/jquery.knob.modified.js"></script>
-
-	<script src="js/jquery.sparkline.min.js"></script>
-
-	<script src="js/counter.js"></script>
-
-	<script src="js/retina.js"></script>
-
-	<script src="js/custom.js"></script>
-    
-    </script>
 </html>
     

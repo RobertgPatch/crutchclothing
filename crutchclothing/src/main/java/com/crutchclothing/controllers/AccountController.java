@@ -29,6 +29,7 @@ import com.crutchclothing.users.model.Address;
 import com.crutchclothing.users.model.User;
 import com.crutchclothing.users.model.UserRole;
 import com.crutchclothing.users.service.UserService;
+import com.crutchclothing.util.CrutchUtils;
 
 @Controller
 public class AccountController {
@@ -65,7 +66,7 @@ public class AccountController {
 			 //model.addAttribute("cartProducts", new ArrayList<CartProduct>(user.getUserCart().getCartProducts()));
 		 }
 		 
-		 model.addAttribute("name", capitalizeName(name));
+		 model.addAttribute("name", CrutchUtils.capitalizeName(name));
 		
 		return "account";
 	}
@@ -83,7 +84,7 @@ public class AccountController {
 		model.addAttribute("username", oldUser.getUsername());
 		//model.addAttribute("cartProducts", new ArrayList<CartProduct>(cart.getCartProducts()));
 		model.addAttribute("cartQty", oldUser.getUserCart().getTotalQuantity());
-		model.addAttribute("name", capitalizeName(name));
+		model.addAttribute("name", CrutchUtils.capitalizeName(name));
 		model.addAttribute("addressList", oldUser.getAddresses());
 		
 		
@@ -110,7 +111,7 @@ public class AccountController {
         		model.addAttribute("user", updatedUser);
     			//model.addAttribute("cartProducts", new ArrayList<CartProduct>(oldUser.getUserCart().getCartProducts()));
     			model.addAttribute("cartQty", oldUser.getUserCart().getTotalQuantity());
-        		model.addAttribute("name", capitalizeName(name));
+        		model.addAttribute("name", CrutchUtils.capitalizeName(name));
     			model.addAttribute("username", updatedUser.getUsername());
     			/*
         		redir.addFlashAttribute("user", updatedUser);
@@ -130,7 +131,7 @@ public class AccountController {
 		String name = SecurityContextHolder.getContext().getAuthentication().getName();
 		String view = null;
 		User foundUser = userService.findUser(name);
-		model.addAttribute("name", capitalizeName(name));
+		model.addAttribute("name", CrutchUtils.capitalizeName(name));
 		model.addAttribute("user", user);
 		model.addAttribute("addressList", foundUser.getAddresses());
 		//model.addAttribute("cartProducts", new ArrayList<CartProduct>(foundUser.getUserCart().getCartProducts()));
@@ -146,6 +147,7 @@ public class AccountController {
 			return "account";
 		}
 		else {
+			CrutchUtils.capitalizeAddress(user.getNewAddress());
 			userService.saveAddress(name, user.getNewAddress());
 			User updatedUser = userService.findUser(name);
 			model.addAttribute("user", foundUser);
@@ -176,8 +178,4 @@ public class AccountController {
 		return "account";
 	}
 	
-	private String capitalizeName(String name) {
-		String formattedName = name.substring(0,1).toUpperCase() + name.substring(1, name.length()).toLowerCase();
-		return formattedName;
-	}
 }

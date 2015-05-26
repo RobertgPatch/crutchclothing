@@ -302,11 +302,11 @@ public class User implements Serializable {
 	public String getTopRole(){
 		for(UserRole role : userRole) {
 			if(role.getRole().contains("ADMIN")) {
-				return role.getRole();
+				return role.getShortName();
 			}
 		}
 		
-		return ("ROLE_USER");
+		return ("User");
 	}
 
 

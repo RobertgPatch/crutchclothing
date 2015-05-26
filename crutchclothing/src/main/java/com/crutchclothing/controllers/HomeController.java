@@ -62,11 +62,24 @@ public class HomeController {
 	}
 
 	@RequestMapping(value = "/admin**", method = RequestMethod.GET)
-	public String adminPage(Model model) {
-
-		model.addAttribute("title", "Spring Security Custom Login Form");
-		model.addAttribute("message", "This is protected page!");
+	public String adminPage(Model model, Principal auth) {
 		
+		String name = "anonymoususer";
+		
+		if(auth != null) {
+			name = auth.getName();
+		}
+		
+		model.addAttribute("name", capitalizeName(name));
+	    //System.out.println(name);
+	    
+	   if(!name.equalsIgnoreCase("anonymoususer")) {
+		   User user = userService.findUser(name);
+		   model.addAttribute("title", "Spring Security Custom Login Form");
+		   model.addAttribute("message", "This is protected page!");
+		   model.addAttribute("shortRole", user.getTopRole());
+		   model.addAttribute("users", userService.findAllUsers());
+	   }
 		return "admin";
 
 	}

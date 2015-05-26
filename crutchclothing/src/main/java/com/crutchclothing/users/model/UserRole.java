@@ -12,7 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
+
+import com.crutchclothing.util.CrutchUtils;
 
 @Entity
 @Table(name = "user_roles", catalog = "crutch", uniqueConstraints = @UniqueConstraint(columnNames = { "role", "username" }))
@@ -25,6 +28,7 @@ public class UserRole implements Serializable{
 	private Integer userRoleId;
 	private User user;
 	private String role;
+	private String shortName;
 
 	public UserRole() {
 	}
@@ -63,5 +67,12 @@ public class UserRole implements Serializable{
 	public void setRole(String role) {
 		this.role = role;
 	}
+	
+	@Transient
+	public String getShortName() {
+		return CrutchUtils.capitalizeName(
+				this.role.substring(this.role.indexOf('_') + 1));
+	}
+
 
 }
