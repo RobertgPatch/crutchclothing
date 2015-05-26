@@ -79,5 +79,7 @@ public class ProductService {
 	public void setProductDao(ProductDao productDao) {
 		this.productDao = productDao;
 	}
+	
+	
 }
 

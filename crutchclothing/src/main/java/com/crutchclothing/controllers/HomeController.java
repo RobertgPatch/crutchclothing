@@ -26,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.crutchclothing.users.model.User;
 import com.crutchclothing.users.service.UserService;
+import com.crutchclothing.util.CrutchUtils;
 
 /**
  * Handles requests for the application home page.
@@ -64,24 +65,31 @@ public class HomeController {
 	@RequestMapping(value = "/admin**", method = RequestMethod.GET)
 	public String adminPage(Model model, Principal auth) {
 		
-		String name = "anonymoususer";
+		String name = "Anonymoususer";
 		
 		if(auth != null) {
 			name = auth.getName();
 		}
 		
-		model.addAttribute("name", capitalizeName(name));
-	    //System.out.println(name);
+		model.addAttribute("name", CrutchUtils.capitalizeName(name));
 	    
 	   if(!name.equalsIgnoreCase("anonymoususer")) {
 		   User user = userService.findUser(name);
 		   model.addAttribute("title", "Spring Security Custom Login Form");
 		   model.addAttribute("message", "This is protected page!");
+		   model.addAttribute("cartQuan", user.getUserCart().getTotalQuantity());
 		   model.addAttribute("shortRole", user.getTopRole());
 		   model.addAttribute("users", userService.findAllUsers());
 	   }
 		return "admin";
 
+	}
+	
+	@RequestMapping(value="/admin/delete-user/{username}")
+	public String deleteUser(@PathVariable String username, Model model, Principal auth) {
+		
+		userService.deleteUser(username);
+		return adminPage(model, auth);
 	}
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)

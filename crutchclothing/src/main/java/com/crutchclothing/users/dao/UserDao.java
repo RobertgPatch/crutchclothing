@@ -29,4 +29,6 @@ public interface UserDao {
 	
 	void updateUserAddressType(Integer addressId, AddressType addressType);
 	
+	void deleteUser(String username);
+	
 }

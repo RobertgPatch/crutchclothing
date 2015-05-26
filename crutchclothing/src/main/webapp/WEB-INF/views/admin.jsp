@@ -244,10 +244,10 @@
 						<div class="right pull-right">
 							<ul class="list-unstyled">
 								<c:if test="${name != 'Anonymoususer'}">
-									<c:if test="${cartQty > 0 }" >
-										<li class="a text-left"><a href="cart"><span class="glyphicon glyphicon-shopping-cart"></span></a>${cartQty}</li>
+									<c:if test="${cartQuan > 0 }" >
+										<li class="a text-left"><a href="cart"><span class="glyphicon glyphicon-shopping-cart"></span></a>${cartQuan}</li>
 									</c:if>
-									<c:if test="${cartQty == 0}" >
+									<c:if test="${cartQuan == 0}" >
 										<li class="a text-left"><a href="cart"><span class="glyphicon glyphicon-shopping-cart"></span></a></li>
 									</c:if>
 								</c:if>
@@ -312,7 +312,7 @@
 								</td>
 								<td class="center">
 								
-									<a href="#" ><span class="label label-danger">Remove</span></a>
+									<a href="admin/delete-user/${member.username}" ><span class="label label-danger">Remove</span></a>
 									
 								</td>
 							</tr>

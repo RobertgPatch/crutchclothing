@@ -327,7 +327,7 @@ This template build on DevKit http://www.bootstraptor.com
 						<div class="right pull-right">
 							<ul class="list-unstyled">
 								<c:if test="${name != 'Anonymoususer'}">
-									<li class="a text-left"><a href="cart"><span class="glyphicon glyphicon-shopping-cart"></span></a>${cartQuan }</li>
+									<li class="a text-left"><a href="cart"><span class="glyphicon glyphicon-shopping-cart"></span></a>${cartQuan}</li>
 								</c:if>
 								<c:if test="${name == 'Anonymoususer'}">
 									<li class="a text-left"><a href="cart"><span class="glyphicon glyphicon-shopping-cart"></span></a></li>

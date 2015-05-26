@@ -89,6 +89,8 @@ public class RegistrationController {
 
     }
 	
+	
+	
 	private void authenticateUserAndSetSession(User user, HttpServletRequest request) {
         String username = user.getUsername();
         String password = user.getPassword();

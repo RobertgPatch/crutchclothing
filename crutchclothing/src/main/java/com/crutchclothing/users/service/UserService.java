@@ -69,4 +69,8 @@ public class UserService {
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
 	}
+	
+	public void deleteUser(String username) {
+		this.userDao.deleteUser(username);
+	}
 }

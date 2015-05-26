@@ -160,6 +160,16 @@ public class UserDaoImpl implements UserDao {
 		}
 		
 	}
+	
+	@Override
+	@Transactional
+	public void deleteUser(String username) {
+		User user = findByUserName(username);
+		for (UserRole role : user.getUserRole()) {
+			this.sessionFactory.getCurrentSession().delete(role);
+		}
+		this.sessionFactory.getCurrentSession().delete(user);
+	}
 	@Override
 	public void updateUserAddressType(Integer addressId, AddressType addressType) {
 		
@@ -176,5 +186,7 @@ public class UserDaoImpl implements UserDao {
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
+	
+	
 
 }
