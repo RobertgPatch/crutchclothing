@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.crutchclothing.cart.model.Cart;
 import com.crutchclothing.users.model.Address;
 import com.crutchclothing.users.model.User;
+import com.crutchclothing.users.service.MyUserDetailsService;
 import com.crutchclothing.users.service.UserService;
 import com.crutchclothing.util.CrutchUtils;
 
@@ -40,7 +42,13 @@ public class RegistrationController {
 	@Qualifier("userService")
 	UserService userService;
 	
-	private AuthenticationManager authenticationManager;
+	@Autowired
+	@Qualifier("myUserDetailsService")
+	MyUserDetailsService userDetailsService;
+	
+	@Autowired
+	@Qualifier("authenticationManager")
+	AuthenticationManager authenticationManager;
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
@@ -83,7 +91,7 @@ public class RegistrationController {
             userService.addUser(user);
             model.addAttribute("name", CrutchUtils.capitalizeName(user.getFirstName()));
             //userService.saveAddress(address);
-            //authenticateUserAndSetSession(user, request);
+            authenticateUserAndSetSession(user, request);
             return "registrationsuccess";
         }
 
@@ -92,17 +100,10 @@ public class RegistrationController {
 	
 	
 	private void authenticateUserAndSetSession(User user, HttpServletRequest request) {
-        String username = user.getUsername();
-        String password = user.getPassword();
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
-
-        // generate session if one doesn't exist
-        request.getSession();
-
-        token.setDetails(new WebAuthenticationDetails(request));
-        Authentication authenticatedUser = authenticationManager.authenticate(token);
-
-        SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
+		String username = user.getUsername();
+		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 	
 	private void formatUser(User user) {

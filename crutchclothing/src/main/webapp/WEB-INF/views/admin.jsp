@@ -184,6 +184,8 @@
     </head>
 <body>
 
+
+	
 <!----start-container----->
 		<div class="header-bg">
 			<div class="container">
@@ -312,7 +314,7 @@
 								</td>
 								<td class="center">
 								
-									<a href="admin/delete-user/${member.username}" ><span class="label label-danger">Remove</span></a>
+									<a href="admin/delete-user/${member.username}" ><span style="color:red" class="glyphicon glyphicon-trash" /></a>
 									
 								</td>
 							</tr>
