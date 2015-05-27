@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.crutchclothing.cart.model.Cart;
 import com.crutchclothing.users.model.User;
 import com.crutchclothing.users.service.UserService;
 import com.crutchclothing.util.CrutchUtils;
@@ -35,7 +37,10 @@ import com.crutchclothing.util.CrutchUtils;
 public class HomeController {
 
 	private UserService userService;
-
+	private User user;
+	private Cart cart;
+	private List<User> userList;
+	
 	@RequestMapping(value = { "/", "/welcome**" }, method = RequestMethod.GET)
 	public String welcomePage(Model model, Principal auth) {
 
@@ -52,9 +57,14 @@ public class HomeController {
 	    //System.out.println(name);
 	    
 	   if(!name.equalsIgnoreCase("anonymoususer")) {
-			User user = userService.findUser(name);
-			model.addAttribute("user", user);
-			model.addAttribute("cartQuan", user.getUserCart().getTotalQuantity());
+		    if(this.user == null) {
+				this.user = userService.findUser(name);
+		    }
+		    if(this.cart == null) {
+				this.cart = user.getUserCart();
+		    }
+			model.addAttribute("user", this.user);
+			model.addAttribute("cartQuan", cart.getTotalQuantity());
 	   }
 	   
 		
@@ -74,21 +84,30 @@ public class HomeController {
 		model.addAttribute("name", CrutchUtils.capitalizeName(name));
 	    
 	   if(!name.equalsIgnoreCase("anonymoususer")) {
-		   User user = userService.findUser(name);
+		   if(this.user == null) {
+			   this.user = userService.findUser(name);
+		   }
+		   if(this.cart == null) {
+			   cart = user.getUserCart();
+		   }
+		   if(this.userList == null) {
+			   userList = userService.findAllUsers();
+		   }
 		   model.addAttribute("title", "Spring Security Custom Login Form");
 		   model.addAttribute("message", "This is protected page!");
-		   model.addAttribute("cartQuan", user.getUserCart().getTotalQuantity());
-		   model.addAttribute("shortRole", user.getTopRole());
-		   model.addAttribute("users", userService.findAllUsers());
+		   model.addAttribute("cartQuan", this.cart.getTotalQuantity());
+		   model.addAttribute("shortRole", this.user.getTopRole());
+		   model.addAttribute("users", userList);
 	   }
 		return "admin";
 
 	}
 	
-	@RequestMapping(value="/admin/delete-user/{username}")
+	@RequestMapping(value="admin/delete-user/{username}")
 	public String deleteUser(@PathVariable String username, Model model, Principal auth) {
 		
 		userService.deleteUser(username);
+		userList = userService.findAllUsers();
 		return adminPage(model, auth);
 	}
 	
@@ -163,6 +182,10 @@ public class HomeController {
 		private String capitalizeName(String name) {
 			String formattedName = name.substring(0,1).toUpperCase() + name.substring(1, name.length()).toLowerCase();
 			return formattedName;
+		}
+		
+		private void initVariables() {
+			
 		}
 		
 		public UserService getUserService() {
