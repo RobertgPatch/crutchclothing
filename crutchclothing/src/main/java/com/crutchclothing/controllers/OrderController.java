@@ -2,6 +2,8 @@ package com.crutchclothing.controllers;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.crutchclothing.cart.model.Cart;
@@ -28,12 +31,19 @@ import com.crutchclothing.users.model.User;
 import com.crutchclothing.users.service.UserService;
 import com.crutchclothing.util.AddressType;
 import com.crutchclothing.util.OrderNumber;
+import com.stripe.Stripe;
+import com.stripe.exception.APIConnectionException;
+import com.stripe.exception.APIException;
+import com.stripe.exception.AuthenticationException;
+import com.stripe.exception.CardException;
+import com.stripe.exception.InvalidRequestException;
+import com.stripe.model.Customer;
 
 @Controller
 public class OrderController {
 
-	//@Autowired
-	//@Qualifier("userService")
+	@Autowired
+	@Qualifier("userService")
 	private UserService userService;
 
 	//@Autowired
@@ -131,7 +141,39 @@ public class OrderController {
 		return "checkout";
 	}
 	
-	
+	@RequestMapping(value="/order", method = RequestMethod.POST)  
+	public String verifyShippingInfo(@RequestParam("stripeToken") String stripeToken, 
+			@ModelAttribute("order") Order order, ModelMap model) {  
+		
+		Stripe.apiKey = "sk_test_JMHGITpDdOWOtIjc7sd9E0QH";
+
+		Map<String, Object> customerParams = new HashMap<String, Object>();
+		customerParams.put("description", "Customer for test@example.com");
+		customerParams.put("email", "test@example.com");
+		//customerParams.put("source", stripeToken); // obtained with Stripe.js
+
+		try {
+			Customer.create(customerParams);
+		} catch (AuthenticationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidRequestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (APIConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CardException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (APIException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return "welcome";
+	}
+		
 	public String createOrder(){
 		
 		Order order = new Order();

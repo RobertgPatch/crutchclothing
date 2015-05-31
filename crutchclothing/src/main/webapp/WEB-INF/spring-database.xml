@@ -18,11 +18,18 @@
 	-->
 	
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" > 
+		
+		<!--  
         <property name="driverClassName" value="com.google.appengine.api.rdbms.AppEngineDriver" /> 
-        <property name="url" value="jdbc:google:rdbms://astute-psyche-88208:google-crutch-db/crutch " /> 
+        <property name="url" value="jdbc:google:rdbms://astute-psyche-88208:google-crutch-db/crutch " />
         <property name="username" value="root" /> 
- 
-
+         --> 
+        
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" /> 
+        <property name="url" value="jdbc:mysql://173.194.250.119:3306/crutch " />
+        <property name="username" value="crutch" /> 
+        <property name="password" value="admin" />
+       
     </bean> 
 	
 

@@ -103,7 +103,7 @@ public class HomeController {
 
 	}
 	
-	@RequestMapping(value="admin/delete-user/{username}")
+	@RequestMapping(value="/admin/delete-user/{username}")
 	public String deleteUser(@PathVariable String username, Model model, Principal auth) {
 		
 		userService.deleteUser(username);

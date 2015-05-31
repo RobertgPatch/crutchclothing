@@ -66,7 +66,7 @@
 			 
 				<div class="row">
 					<div class="col-md-4">
-						<div class="logo"><a href="welcome"><img src="/resources/images/crutch_logo_final.png" alt=""/></a></div>
+						<div class="logo"><a href="welcome"><img src="/resources/images/crutch_logo_final3.png" alt=""/></a></div>
 					</div>
 					<div class="col-md-8">		
 								

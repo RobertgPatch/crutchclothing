@@ -30,9 +30,105 @@
 		<script src="<c:url value="/resources/js/jquery-ui.min.js" />"></script>
 		<script src="<c:url value="/resources/js/fwslider.js" />"></script>
 		<script src="<c:url value="/resources/jquery.validate.min.js" />"></script>
+		<script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.8.1/jquery.validate.min.js"></script>
 		<script src="<c:url value="/resources/additional-methods.min.js" />"></script>
 		
+		<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 	<!--end slider -->
+	
+	 <script type="text/javascript">
+          Stripe.setPublishableKey('pk_test_Eb0m2uBHbsPfIarhifiMcBd1');
+            $(document).ready(function() {
+                function addInputNames() {
+                    // Not ideal, but jQuery's validate plugin requires fields to have names
+                    // so we add them at the last possible minute, in case any javascript 
+                    // exceptions have caused other parts of the script to fail.
+                    $(".card-number").attr("name", "card-number")
+                    $(".card-cvc").attr("name", "card-cvc")
+                    $(".card-expiry-year").attr("name", "card-expiry-year")
+                }
+
+                function removeInputNames() {
+                    $(".card-number").removeAttr("name")
+                    $(".card-cvc").removeAttr("name")
+                    $(".card-expiry-year").removeAttr("name")
+                }
+
+                function submit(form) {
+                    // remove the input field names for security
+                    // we do this *before* anything else which might throw an exception
+                    removeInputNames(); // THIS IS IMPORTANT!
+
+                    // given a valid form, submit the payment details to stripe
+                    $(form['submit-button']).attr("disabled", "disabled")
+
+                    Stripe.createToken({
+                        number: $('.card-number').val(),
+                        cvc: $('.card-cvc').val(),
+                        exp_month: $('.card-expiry-month').val(), 
+                        exp_year: $('.card-expiry-year').val()
+                    }, function(status, response) {
+                        if (response.error) {
+                            // re-enable the submit button
+                            $(form['submit-button']).removeAttr("disabled")
+        
+                            // show the error
+                            $(".payment-errors").html(response.error.message);
+
+                            // we add these names back in so we can revalidate properly
+                            addInputNames();
+                        } else {
+                            // token contains id, last4, and card type
+                            var token = response['id'];
+
+                            // insert the stripe token
+                            var input = $("<input name='stripeToken' value='" + token + "' style='display:none;' />");
+                            
+                            form.appendChild(input[0])
+							
+                            $("#collapseFive").collapse('hide');
+				   			$("#collapseSix").collapse('show');
+				   			window.location.replace("#collapseSix");
+                            // and submit
+                            //form.submit();
+                        }
+                    });
+                    
+                    return false;
+                }
+                
+                // add custom rules for credit card validating
+                jQuery.validator.addMethod("cardNumber", Stripe.validateCardNumber, "Please enter a valid card number");
+                jQuery.validator.addMethod("cardCVC", Stripe.validateCVC, "Please enter a valid security code");
+                jQuery.validator.addMethod("cardExpiry", function() {
+                    return Stripe.validateExpiry($(".card-expiry-month").val(), 
+                                                 $(".card-expiry-year").val())
+                }, "Please enter a valid expiration");
+
+                // We use the jQuery validate plugin to validate required params on submit
+                $("#example-form").validate({
+                    submitHandler: submit,
+                    rules: {
+                        "card-cvc" : {
+                            cardCVC: true,
+                            required: true
+                        },
+                        "card-number" : {
+                            cardNumber: true,
+                            required: true
+                        },
+                        "card-expiry-year" : "cardExpiry" // we don't validate month separately
+                    	},
+                    error: function(element) {
+                            element.addClass("error");
+                        },	
+                    	
+                });
+
+                // adding the input field names is the last step, in case an earlier step errors                
+                addInputNames();
+            });
+        </script>
 	</head>
 	
 	
@@ -60,7 +156,13 @@
 		border-radius:0px;
 	}
 	
+	.nextToInput {
+    	display: inline-block;
+	}
 
+	.nextToLabel {
+    	display: block;
+	}
 		
 		.page-header{
 			border:none;
@@ -168,6 +270,10 @@
 		margin-top: -10px;
 		margin-left: -10px;
 		font-family: serif;
+	}
+	
+	.error {
+		color: red;
 	}
 		/*************** @media ******************/
 	@media (max-width: 940px){
@@ -281,6 +387,9 @@
 				   document.getElementById("billingError").innerHTML = "";
 				   $("#collapseTwo").collapse('hide');
 				   $("#collapseThree").collapse('show');
+				   var billId = document.getElementById("billAddresses").value;
+				   document.getElementById("billAddressId").value = billId;
+				   
 				   window.location.replace("#collapseThree");
 				}
 				else {
@@ -296,6 +405,10 @@
 				   document.getElementById("shippingError").innerHTML = "";
 				   $("#collapseThree").collapse('hide');
 				   $("#collapseFour").collapse('show');
+				   
+				   var shipId = document.getElementById("shipAddresses").value;
+				   document.getElementById("shipAddressId").value = shipId;
+				   
 				   window.location.replace("#collapseFour");
 				}
 				else {
@@ -307,18 +420,24 @@
 	
 			function validateShipping() {
 
-			if (document.getElementById("optionsRadios1").checked != true ||
+			if (document.getElementById("optionsRadios1").checked != true &&
 				document.getElementById("optionsRadios2").checked != true)
 			{
 				document.getElementById("shipChoiceError").innerHTML = "Please select a shipping method!";
+				
 			}
 			else {
 		  	  // value is set to a valid option, so submit form
-		  	    document.getElementById("shipChoiceError").innerHTML = "";
-				$("#collapseFour").collapse('hide');
-				$("#collapseFive").collapse('show');
-				window.location.replace("#collapseFive");	
+			     
+			     	document.getElementById("shipChoiceError").innerHTML = "";
+					$("#collapseFour").collapse('hide');
+					$("#collapseFive").collapse('show');
+					window.location.replace("#collapseFive");
+				}
 			}
+			
+			function submitCheckout() {
+				document.getElementById("example-form").submit();
 			}
 			
 			
@@ -504,15 +623,15 @@
               <div class="row">
 				<div class="col-12 col-lg-12">
 					<!-- FORM -->
-					<form:form method="post"  action="checkout" commandName="order" id="verifyBilling">
+					<form:form method="post"  action="setbilling" commandName="order" id="verifyBilling">
 						  <fieldset>
 							<legend>Select your billing address</legend>
 							
 							<c:if test="${not empty addressList}">
 							<div class="form-group">
 								<select class="form-control required" id="billAddresses" onchange="fillInBillingFields()">
+	   								<option value="">--Select From Addresses--</option>
 	   								<c:forEach var="address" items="${addressList}">
-	   									<option value="">--Select From Addresses--</option>
 	      								<option value="${address.id}">${address.shortName}, ${address.address1}...${address.zipcode}</option>
 	   								</c:forEach>
 								</select>
@@ -520,7 +639,7 @@
 							<div id="demo"></div>
 							</div>
 							</c:if>
-							<form:hidden path="billingAddress.id" id="billAddressId"/>
+							
 							<form:hidden path="billingAddress.firstName" id="billFirstName"/>
 							<form:hidden path="billingAddress.lastName" id="billLastName"/>
 							<form:hidden path="billingAddress.company" id="billCompany"/>
@@ -796,17 +915,18 @@
 							<legend>CHOOSE SHIPPING METHOD</legend>
 						<div class="radio">
 						  <label>
-							<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+							<input type="radio" name="optionsRadios" id="optionsRadios1" />
 							Flat USPS Priority Mail Shipping Rate - $8.00
 						  </label>
 						</div>
 						<div class="radio">
 						  <label>
-							<input type="radio" name="optionsRadios" id="optionsRadios3" value="option3">
+							<input type="radio" name="optionsRadios" id="optionsRadios2"  />
 							USPS Expedited Mail Shipping Rate - $24.00
 						  </label>
 						</div>
-						<button type="button" class="btn btn-info collapseFourBtn" data-toggle="collapse" onclick="validateShipping()" >Continue</button></a>
+					
+						<button type="button" class="btn btn-info collapseFourBtn" data-toggle="collapse" data-parent="#accordion" onclick="validateShipping()">Continue</button>
 					</fieldset>
 				</form>
 				<span id="shipChoiceError" style="color: #ff0000;" class="help-inline"></span>
@@ -828,6 +948,7 @@
        <div class="panel-body">
               <div class="row">
 				<div class="col-12 col-lg-12">
+				<!-- 
 					<form>
 						<fieldset>
 								<legend>CHOOSE PAYMENT METHOD</legend>
@@ -846,6 +967,173 @@
 							<a href="#collapseSix"><button type="button" class="btn btn-info collapseFiveBtn" data-toggle="collapse" data-parent="#accordion" data-target="#collapseSix" >Continue</button></a>
 						</fieldset>
 					</form>
+					
+					<form action="" method="POST" id="payment-form">
+    					<span class="payment-errors"></span>
+    					<div class="form-row">
+    					<label>
+        					<span>Card Number</span>
+        					<input type="text" size="20" data-stripe="number"/>
+      					</label>
+    					</div>
+    					
+				    <div class="form-row">
+      					<label>
+        					<span>CVC</span>
+        					<input type="text" size="4" data-stripe="cvc"/>
+      					</label>
+   					</div>
+
+				    <div class="form-row">
+      					<label>
+        					<span>Expiration (MM/YYYY)</span>
+        					<input type="text" size="2" data-stripe="exp-month"/>
+      					</label>
+				      <span> / </span>
+      					<input type="text" size="4" data-stripe="exp-year"/>
+    				</div>
+   					 <button type="submit">Submit Payment</button>
+  				</form>
+  				-->
+		
+		<!--
+		
+  		<form action="" class="form-horizontal col-md-12 center-block" method="post" id="example-form" style="display: none;">
+ 			
+ 			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+ 			
+				  
+            <div class="form-row form-group">
+                <label for="name" class="stripeLabel">Your Name</label>
+                <input type="text" name="name" class="required form-control input-lg" />
+            </div>            
+    
+            <div class="form-row form-group">
+                <label for="email">E-mail Address</label>
+                <input type="text" name="email" class="required form-control input-lg" />
+            </div>            
+    
+            <div class="form-row form-group" style="display:inline-block; overflow:auto; height:auto;">
+                <!-- <div style="float:left;">  -->
+                <!-- 
+                <label>Card Number</label>
+                <input type="text" maxlength="20" autocomplete="off" class="card-number stripe-sensitive required form-control input-lg" />  
+            	<!--  </div> -->
+            	<!-- 
+            </div>
+            
+            <div class="form-row form-group" style="display:inline-block; overflow:auto; height:auto; padding-left:5%;">
+                <!-- <div style="float:left;">  -->
+                <!-- 
+                <label>CVC</label>
+                <input type="text" maxlength="4" autocomplete="off" class="card-cvc stripe-sensitive required form-control input-lg" style="width:40%;"/>
+				<!-- </div>  -->
+				<!-- 
+            </div>
+            
+            <div class="form-row form-group">
+                <label>Expiration</label>
+                <div class="expiry-wrapper">
+                    <select class="card-expiry-month stripe-sensitive required">
+                    </select>
+                    <script type="text/javascript">
+                        var select = $(".card-expiry-month"),
+                            month = new Date().getMonth() + 1;
+                        for (var i = 1; i <= 12; i++) {
+                            select.append($("<option value='"+i+"' "+(month === i ? "selected" : "")+">"+i+"</option>"))
+                        }
+                    </script>
+                    <span> / </span>
+                    <select class="card-expiry-year stripe-sensitive required"></select>
+                    <script type="text/javascript">
+                        var select = $(".card-expiry-year"),
+                            year = new Date().getFullYear();
+
+                        for (var i = 0; i < 12; i++) {
+                            select.append($("<option value='"+(i + year)+"' "+(i === 0 ? "selected" : "")+">"+(i + year)+"</option>"))
+                        }
+                    </script>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-info collapseFiveBtn" data-toggle="collapse" name="submit-button" >Continue</button>
+            <span class="payment-errors"></span>
+        </form>
+        -->
+     	
+     	<form:form action="/order" method="post" commandName="order" id="example-form" style="display: none;">
+ 			
+ 			<form:hidden path="billingAddress.id" id="billAddressId"/>
+			<form:hidden path="shippingAddress.id" id="shipAddressId"/>
+							
+            <div class="form-row form-group">
+                <label for="name" class="stripeLabel">Your Name</label>
+                <input type="text" name="name" class="required form-control input-lg" value="${user.firstName} ${user.lastName}" />
+            </div>            
+    
+            <div class="form-row form-group" style="overflow:auto;" >
+                <label for="email">E-mail Address</label>
+                <input type="text" name="email" class="required form-control input-lg" value="${user.email}" />
+            </div>            
+    
+            <div class="form-row form-group" style="display:inline-block; overflow:auto; height:auto;">
+                <div style="float:left;">
+                <label>Card Number</label>
+                <input type="text" maxlength="20" autocomplete="off" class="card-number stripe-sensitive required form-control input-lg" />
+            	</div>
+            </div>
+            
+            <div class="form-row form-group" style="display:inline-block; overflow:auto; height:auto; padding-left:1%;">
+                <div style="float:left;">
+                <label>CVC</label>
+                <input type="text" maxlength="4" autocomplete="off" class="card-cvc stripe-sensitive required form-control input-lg" style="width:40%;" />
+            	</div>
+            </div>
+            
+            <div class="form-row form-group">
+                <label>Expiration</label>
+                <div class="expiry-wrapper">
+                	<div style="display:inline-block; overflow:auto; height:auto; padding-right:1%;">
+                    <select class="card-expiry-month stripe-sensitive required form-control" style="float:left;">
+                    </select>
+                    </div>
+                    <script type="text/javascript">
+                        var select = $(".card-expiry-month"),
+                            month = new Date().getMonth() + 1;
+                        for (var i = 1; i <= 12; i++) {
+                            select.append($("<option value='"+i+"' "+(month === i ? "selected" : "")+">"+i+"</option>"))
+                        }
+                    </script>
+                    
+                    <div style="display:inline-block;">
+                    <!-- <span> / </span>  -->
+                    <select class="card-expiry-year stripe-sensitive required form-control" style="float:left;"></select>
+                    </div>
+                    <script type="text/javascript">
+                        var select = $(".card-expiry-year"),
+                            year = new Date().getFullYear();
+
+                        for (var i = 0; i < 12; i++) {
+                            select.append($("<option value='"+(i + year)+"' "+(i === 0 ? "selected" : "")+">"+(i + year)+"</option>"))
+                        }
+                    </script>
+                    
+                </div>
+            </div>
+			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <button type="submit" name="submit-button" class="btn btn-info collapseFiveBtn">Continue</button>
+            <span class="payment-errors"></span>
+        </form:form>
+ 
+        <!-- 
+            The easiest way to indicate that the form requires JavaScript is to show
+            the form with JavaScript (otherwise it will not render). You can add a
+            helpful message in a noscript to indicate that users should enable JS.
+        -->
+        <script>if (window.Stripe) $("#example-form").show()</script>
+        <noscript><p>JavaScript is required for the registration form.</p></noscript>
+ 
+
+					
 			  </div>
             </div>
           </div>
@@ -911,7 +1199,7 @@
 						  <dd>$${subtotal + shipping}</dd>
 						</dl>
 					<div class="clearfix"></div>
-					<button type="submit" class="btn btn-info pull-right">Confirm Order</button>
+					<button type="button" class="btn btn-info pull-right" id="confirmOrder" onclick="submitCheckout()">Confirm Order</button>
 					
 					<form action="" method="POST">
   <script

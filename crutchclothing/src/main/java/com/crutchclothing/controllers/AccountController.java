@@ -2,6 +2,9 @@ package com.crutchclothing.controllers;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,6 +33,13 @@ import com.crutchclothing.users.model.User;
 import com.crutchclothing.users.model.UserRole;
 import com.crutchclothing.users.service.UserService;
 import com.crutchclothing.util.CrutchUtils;
+import com.stripe.Stripe;
+import com.stripe.exception.APIConnectionException;
+import com.stripe.exception.APIException;
+import com.stripe.exception.AuthenticationException;
+import com.stripe.exception.CardException;
+import com.stripe.exception.InvalidRequestException;
+import com.stripe.model.Customer;
 
 @Controller
 public class AccountController {
@@ -176,6 +186,38 @@ public class AccountController {
 		Integer id = (Integer) model.asMap().get("id");
 		System.out.println("id ====== " + id);
 		return "account";
+	}
+	
+	//@RequestMapping(value="stripe-account")
+	public String createStripeAccount(Model model) {
+		
+		Stripe.apiKey = "sk_test_JMHGITpDdOWOtIjc7sd9E0QH";
+		
+		String uuid = UUID.randomUUID().toString();
+		Map<String, Object> customerParams = new HashMap<String, Object>();
+		customerParams.put("description", "Customer for test@example.com");
+		//customerParams.put("source", ""); // obtained with Stripe.js
+
+		try {
+			Customer.create(customerParams);
+		} catch (AuthenticationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidRequestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (APIConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CardException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (APIException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return "welcome";
 	}
 	
 }

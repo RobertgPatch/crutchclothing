@@ -41,7 +41,7 @@ public class User implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private String username;
-	private Integer cart_id;
+	private Integer stripeId;
 	private String firstName;
 	private String middleInit;
 	private String lastName;
@@ -99,6 +99,14 @@ public class User implements Serializable {
 		this.username = username;
 	}
 	
+	@Column(name="stripe_id", unique = true, nullable = true)
+	public Integer getStripeId() {
+		return stripeId;
+	}
+
+	public void setStripeId(Integer stripeId) {
+		this.stripeId = stripeId;
+	}
 	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "cart_id")

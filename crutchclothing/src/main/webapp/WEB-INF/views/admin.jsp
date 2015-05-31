@@ -72,7 +72,6 @@
 <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 
-
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.0/css/jquery.dataTables.css">
 <script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
 <script type="text/javascript" src="//cdn.datatables.net/1.10.0/js/jquery.dataTables.js"></script>
@@ -130,20 +129,8 @@
             } );
 
         } );
-        
-        
 
-    	<c:url value="/j_spring_security_logout" var="logoutUrl" />
-    	<form action="${logoutUrl}" method="post" id="logoutForm">
-    		<input type="hidden" name="${_csrf.parameterName}"
-    			value="${_csrf.token}" />
-    	</form>
-    	
-    		<script>
-    			function formSubmit() {
-    				document.getElementById("logoutForm").submit();
-    			}
-        </script>
+
         
         
         
@@ -181,10 +168,25 @@
         //});
         
         </script>
+        
+        
+         
+
+        
     </head>
 <body>
 
-
+<c:url value="/j_spring_security_logout" var="logoutUrl" />
+    	<form action="${logoutUrl}" method="post" id="logoutForm">
+    		<input type="hidden" name="${_csrf.parameterName}"
+    			value="${_csrf.token}" />
+    	</form>
+    	
+    		<script>
+    			function formSubmit() {
+    				document.getElementById("logoutForm").submit();
+    			}
+        	</script>
 	
 <!----start-container----->
 		<div class="header-bg">
@@ -193,28 +195,28 @@
 			<c:if test="${name != 'Anonymoususer'}">
 				<ul class="list-inline pull-right">
 		 			<li><span class="text-right" style="color: gray">Welcome back : ${name} | </span><a href="javascript:formSubmit()"> Logout</a></li>
-		 			<li><a href="account">Account</a></li>
+		 			<li><a href="${pageContext.request.contextPath}/account">Account</a></li>
 		 		</ul>
 			</c:if>
 
     		<c:if test="${name == 'Anonymoususer'}">
         		<ul class="list-inline pull-right">
-		 			<li><a href="login">Login</a></li>
-		 			<li><a href="registration">Register</a></li>
+		 			<li><a href="${pageContext.request.contextPath}/login">Login</a></li>
+		 			<li><a href="${pageContext.request.contextPath}/registration">Register</a></li>
 		 		</ul>
     			
 			</c:if>
 			 
 				<div class="row">
 					<div class="col-md-4">
-						<div class="logo"><a href="welcome"><img src="/resources/images/crutch_logo_final.png" alt=""/></a></div>
+						<div class="logo"><a href="${pageContext.request.contextPath}/welcome"><img src="/resources/images/crutch_logo_final.png" alt=""/></a></div>
 					</div>
 					<div class="col-md-8">		
 								
 	 					<nav class="navbar navbar-default" role="navigation">
 						  <div class="container-fluid">
 						    <!-- Brand and toggle get grouped for better mobile display -->
-						    <div class="navbar-header"><span class="text-left"><a href="#">MENU</a></span>
+						    <div class="navbar-header"><span class="text-left"><a href="${pageContext.request.contextPath}/welcome">MENU</a></span>
 						      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
 						        <span class="sr-only">Toggle navigation</span>
 						        <span class="icon-bar"></span>
@@ -231,14 +233,14 @@
 							            Categories<span class="caret"></span>
 							          </button>
 							          <ul class="dropdown-menu" role="menu">
-							            <li><a href="products">New arrivals</a></li>
-							            <li><a href="products">Men</a></li>
+							            <li><a href="${pageContext.request.contextPath}/products">New arrivals</a></li>
+							            <li><a href="${pageContext.request.contextPath}/products">Men</a></li>
 							            <li><a href="#">More Coming Soon!!!</a></li>						            
 							          </ul>
 							        </div>						          
 						        </li>
 						        <li><a href="#">About</a></li>
-						        <li><a href="contact">Contact</a></li>
+						        <li><a href="${pageContext.request.contextPath}/contact">Contact</a></li>
 						      </ul>							      					    					      
 						    </div><!-- /.navbar-collapse -->
 						  </div><!-- /.container-fluid -->
@@ -247,16 +249,16 @@
 							<ul class="list-unstyled">
 								<c:if test="${name != 'Anonymoususer'}">
 									<c:if test="${cartQuan > 0 }" >
-										<li class="a text-left"><a href="cart"><span class="glyphicon glyphicon-shopping-cart"></span></a>${cartQuan}</li>
+										<li class="a text-left"><a href="${pageContext.request.contextPath}/cart"><span class="glyphicon glyphicon-shopping-cart"></span></a>${cartQuan}</li>
 									</c:if>
 									<c:if test="${cartQuan == 0}" >
-										<li class="a text-left"><a href="cart"><span class="glyphicon glyphicon-shopping-cart"></span></a></li>
+										<li class="a text-left"><a href="${pageContext.request.contextPath}/cart"><span class="glyphicon glyphicon-shopping-cart"></span></a></li>
 									</c:if>
 								</c:if>
 								<c:if test="${name == 'Anonymoususer'}">
-									<li class="a text-left"><a href="cart"><span class="glyphicon glyphicon-shopping-cart"></span></a></li>
+									<li class="a text-left"><a href="${pageContext.request.contextPath}/cart"><span class="glyphicon glyphicon-shopping-cart"></span></a></li>
 								</c:if>
-								<li><a href="checkout">Checkout</a></li>						
+								<li><a href="${pageContext.request.contextPath}/checkout">Checkout</a></li>						
 							</ul>							
 						</div>	
 					</div>
@@ -314,7 +316,14 @@
 								</td>
 								<td class="center">
 								
-									<a href="admin/delete-user/${member.username}" ><span style="color:red" class="glyphicon glyphicon-trash" /></a>
+									<a href="${pageContext.request.contextPath}/admin/delete-user/${member.username}" >
+										<span style="color:red" class="glyphicon glyphicon-trash" />
+									</a>
+									
+									<a href="${pageContext.request.contextPath}/admin" >
+										<span style="color:blue" class="glyphicon glyphicon-edit" />
+									</a>
+									
 									
 								</td>
 							</tr>
@@ -360,11 +369,11 @@
 		 <div class="row">
 		 	<div class="col-md-12">
 		 		<ul class="list-inline pull-right">
-		 			<li><a href="welcome">Home</a></li>
-		 			<li><a href="products">Products</a></li>
-		 			<li><a href="cart">Cart</a></li>
-		 			<li><a href="account">Account</a></li>
-		 			<li><a href="contact">Contact</a></li>
+		 			<li><a href="${pageContext.request.contextPath}/welcome">Home</a></li>
+		 			<li><a href="${pageContext.request.contextPath}/products">Products</a></li>
+		 			<li><a href="${pageContext.request.contextPath}/cart">Cart</a></li>
+		 			<li><a href="${pageContext.request.contextPath}/account">Account</a></li>
+		 			<li><a href="${pageContext.request.contextPath}/contact">Contact</a></li>
 		 		</ul>
 		 		<!-- 
 		 		<form class="navbar-form pull-right" role="search">
@@ -377,7 +386,7 @@
 		 	</div>	
 		 </div>	
 		 <div class="copy-right text-center">
-			<p>&#169Copyright 2014 All Rights Reserved  Crutch Clothing<a href="welcome">  crutchclothing.com</a></p>	
+			<p>&#169Copyright 2014 All Rights Reserved  Crutch Clothing<a href="${pageContext.request.contextPath}/welcome">  crutchclothing.com</a></p>	
 		</div>
 	</div>
 </div>

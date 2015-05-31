@@ -98,7 +98,6 @@ public class RegistrationController {
     }
 	
 	
-	
 	private void authenticateUserAndSetSession(User user, HttpServletRequest request) {
 		String username = user.getUsername();
 		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -117,9 +116,7 @@ public class RegistrationController {
 	}
 	
 	
-	
-	
-	
+
 	private void setAuthenticationManager(AuthenticationManager authenticationManager) {
 		this.authenticationManager = authenticationManager;
 	}
