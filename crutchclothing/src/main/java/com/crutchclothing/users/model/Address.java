@@ -36,6 +36,7 @@ public class Address implements Serializable{
 	private String city;
 	private String state;
 	private String zipcode;
+	private String phone;
 	private String address2;
 	private String address3;
 	private String shortName;
@@ -165,7 +166,15 @@ public class Address implements Serializable{
 	public void setZipcode(String zipcode) {
 		this.zipcode = zipcode;
 	}
-
+	
+	@Column(name = "phone_number", unique = false, nullable = true, length = 45)
+	public String getPhone() {
+		return this.phone;
+	}
+	
+	public void setPhone(String phone) {
+		this.phone= phone;
+	}
 	
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(name = "user_addresses", 

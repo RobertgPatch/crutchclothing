@@ -43,10 +43,10 @@ public class UserValidator implements Validator {
     	    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "valid.password", "Please type your password.");
     	    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "passwordConf", "valid.passwordConf", "Please confirm password.");
     	}
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "firstName", "valid.firstName", "Please type your first name.");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lastName", "valid.lastName", "Please type your last name.");
+        //ValidationUtils.rejectIfEmptyOrWhitespace(errors, "firstName", "valid.firstName", "Please type your first name.");
+        //ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lastName", "valid.lastName", "Please type your last name.");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "valid.email", "Please type your email address.");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "phoneNumber", "valid.phone", "Please type your phone number.");
+        //ValidationUtils.rejectIfEmptyOrWhitespace(errors, "phoneNumber", "valid.phone", "Please type your phone number.");
    
         
        
@@ -71,6 +71,7 @@ public class UserValidator implements Validator {
         	}
         }
         
+        /*
         pattern = null;
         pattern = Pattern.compile(PHONE_PATTERN);
         if(user.getEmail() != null) {
@@ -79,22 +80,23 @@ public class UserValidator implements Validator {
         		errors.rejectValue("phoneNumber", "matcher.phone", "Phone number entered does not match expected format.");
         	}
         }
+        */
         
-        if(user.getNewAddress() != null /*|| user.getShipAddress() != null*/) {
+        //if(user.getNewAddress() != null /*|| user.getShipAddress() != null*/) {
 
-        	try{
-        		if(user.getNewAddress() != null) {
-        			ValidationUtils.invokeValidator(addressValidator, user.getNewAddress(), errors); 
-        		}
+        	//try{
+        		//if(user.getNewAddress() != null) {
+        			//ValidationUtils.invokeValidator(addressValidator, user.getNewAddress(), errors); 
+        		//}
         		/*
         		else if(user.getShipAddress() != null) {
         			ValidationUtils.invokeValidator(addressValidator, user.getShipAddress(), errors); 
         		}
         		*/
-        	}catch (Exception e){ 
-        		e.printStackTrace();
-        	}
-        }
+        	//}catch (Exception e){ 
+        		//e.printStackTrace();
+        	//}
+        //}
 
     
         /*

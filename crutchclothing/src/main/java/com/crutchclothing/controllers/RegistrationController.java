@@ -2,7 +2,9 @@ package com.crutchclothing.controllers;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,6 +35,13 @@ import com.crutchclothing.users.model.User;
 import com.crutchclothing.users.service.MyUserDetailsService;
 import com.crutchclothing.users.service.UserService;
 import com.crutchclothing.util.CrutchUtils;
+import com.stripe.Stripe;
+import com.stripe.exception.APIConnectionException;
+import com.stripe.exception.APIException;
+import com.stripe.exception.AuthenticationException;
+import com.stripe.exception.CardException;
+import com.stripe.exception.InvalidRequestException;
+import com.stripe.model.Customer;
 
 
 @Controller
@@ -86,10 +95,13 @@ public class RegistrationController {
 
         	user.setPassword(passwordEncoder.encode(user.getPassword()));
         	Cart cart = new Cart();
-        	//user.setCart(cart);
-        	formatUser(user);
+        	user.setUserCart(cart);
+        	//formatUser(user);
+        	user.setEmail(user.getEmail().toLowerCase());
+        	String stripeId = createStripeUser(user.getEmail());
+    		user.setStripeId(stripeId);
             userService.addUser(user);
-            model.addAttribute("name", CrutchUtils.capitalizeName(user.getFirstName()));
+            model.addAttribute("name", user.getUsername());
             //userService.saveAddress(address);
             authenticateUserAndSetSession(user, request);
             return "registrationsuccess";
@@ -105,6 +117,7 @@ public class RegistrationController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 	
+	/*
 	private void formatUser(User user) {
 		String firstName = user.getFirstName();
 		String lastName = user.getLastName();
@@ -113,6 +126,34 @@ public class RegistrationController {
 		user.setLastName(CrutchUtils.capitalizeName(lastName));
 		
 		//capitalizeAddress()
+	}
+	*/
+	private String createStripeUser(String email) {
+		Stripe.apiKey = "sk_test_JMHGITpDdOWOtIjc7sd9E0QH";
+		Map<String, Object> customerParams = new HashMap<String, Object>();
+		customerParams.put("description", "Customer for test@example.com");
+		customerParams.put("email", email);
+		//customerParams.put("source", stripeToken); // obtained with Stripe.js
+
+		try {
+			return Customer.create(customerParams).getId();
+		} catch (AuthenticationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidRequestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (APIConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CardException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (APIException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	

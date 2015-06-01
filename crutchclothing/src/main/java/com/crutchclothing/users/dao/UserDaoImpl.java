@@ -107,10 +107,10 @@ public class UserDaoImpl implements UserDao {
 		User currUser = findByUserName(name);
 		
 		currUser.setEmail(user.getEmail());
-		currUser.setFirstName(user.getFirstName());
-		currUser.setLastName(user.getLastName());
-		currUser.setMiddleInit(user.getMiddleInit());
-		currUser.setPhoneNumber(user.getPhoneNumber());
+		//currUser.setFirstName(user.getFirstName());
+		//currUser.setLastName(user.getLastName());
+		//currUser.setMiddleInit(user.getMiddleInit());
+		//currUser.setPhoneNumber(user.getPhoneNumber());
 
 		sessionFactory.getCurrentSession().saveOrUpdate(currUser);
 	}

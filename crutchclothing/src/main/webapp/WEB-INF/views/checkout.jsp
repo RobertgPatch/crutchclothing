@@ -364,15 +364,16 @@
 			
 			function fillInShippingFields() {
 				   var fields = document.getElementById("shipAddresses").value.split(",");
+				   document.getElementById("shipAddressId").value = fields[0];
 				   
-				   document.getElementById("shipFirstName").value = fields[0]; // name
-				   document.getElementById("shipLastName").value = fields[1]; // name
-				   document.getElementById("shipAddress1").value = fields[2]; // name
-				   document.getElementById("shipAddress2").value = fields[3]; // name
-				   document.getElementById("shipAddress3").value = fields[4];
-				   document.getElementById("shipCity").value = fields[5];
-				   document.getElementById("shipState").value = fields[6];
-				   document.getElementById("shipPostCode").value = fields[7];
+				   //document.getElementById("shipFirstName").value = fields[0]; // name
+				   //document.getElementById("shipLastName").value = fields[1]; // name
+				   //document.getElementById("shipAddress1").value = fields[2]; // name
+				   //document.getElementById("shipAddress2").value = fields[3]; // name
+				   //document.getElementById("shipAddress3").value = fields[4];
+				   //document.getElementById("shipCity").value = fields[5];
+				   //document.getElementById("shipState").value = fields[6];
+				   //document.getElementById("shipPostCode").value = fields[7];
 				}
 			
 			
@@ -432,6 +433,17 @@
 			     	document.getElementById("shipChoiceError").innerHTML = "";
 					$("#collapseFour").collapse('hide');
 					$("#collapseFive").collapse('show');
+					
+					var shipPrice = null;
+					if(document.getElementById("optionsRadios1").checked == true) {
+						shipPrice = document.getElementById("optionsRadios1").value;
+					}
+					else if(document.getElementById("optionsRadios2").checked == true) {
+						shipPrice = document.getElementById("optionsRadios2").value;
+					}
+					
+					document.getElementById("shippingPrice").value = shipPrice;
+					
 					window.location.replace("#collapseFive");
 				}
 			}
@@ -640,15 +652,6 @@
 							</div>
 							</c:if>
 							
-							<form:hidden path="billingAddress.firstName" id="billFirstName"/>
-							<form:hidden path="billingAddress.lastName" id="billLastName"/>
-							<form:hidden path="billingAddress.company" id="billCompany"/>
-							<form:hidden path="billingAddress.address1" id="billAddress1"/>
-							<form:hidden path="billingAddress.address2" id="billAddress2"/>
-							<form:hidden path="billingAddress.address3" id="billAddress3"/>
-							<form:hidden path="billingAddress.city" id="billCity"/>
-							<form:hidden path="billingAddress.state" id="billState"/>
-							<form:hidden path="billingAddress.zipcode" id="billZipcode"/>
 							
 							<!--  
 							<div class="form-group">
@@ -783,7 +786,7 @@
 								<select class="form-control" id="shipAddresses" onchange="fillInShippingFields()">
 	   								<c:forEach var="address" items="${addressList}">
 	   									<option value="">--Select Saved Address--</option>
-	      								<option value="${address.firstName},${address.lastName},${address.address1},${address.address2},${address.address3},${address.city},${address.state},${address.zipcode}">${address.shortName}${address.address1}...${address.zipcode}</option>
+	      								<option value="${address.id}">${address.shortName}${address.address1}...${address.zipcode}</option>
 	   								</c:forEach>
 								</select>
 								<span id="shippingError" style="color: #ff0000;" class="help-inline"></span>
@@ -915,13 +918,13 @@
 							<legend>CHOOSE SHIPPING METHOD</legend>
 						<div class="radio">
 						  <label>
-							<input type="radio" name="optionsRadios" id="optionsRadios1" />
+							<input type="radio" name="optionsRadios" id="optionsRadios1" value="8" />
 							Flat USPS Priority Mail Shipping Rate - $8.00
 						  </label>
 						</div>
 						<div class="radio">
 						  <label>
-							<input type="radio" name="optionsRadios" id="optionsRadios2"  />
+							<input type="radio" name="optionsRadios" id="optionsRadios2" value="24"  />
 							USPS Expedited Mail Shipping Rate - $24.00
 						  </label>
 						</div>
@@ -1064,10 +1067,11 @@
  			
  			<form:hidden path="billingAddress.id" id="billAddressId"/>
 			<form:hidden path="shippingAddress.id" id="shipAddressId"/>
+			<form:hidden path="shippingPrice" id="shippingPrice" />
 							
             <div class="form-row form-group">
                 <label for="name" class="stripeLabel">Your Name</label>
-                <input type="text" name="name" class="required form-control input-lg" value="${user.firstName} ${user.lastName}" />
+                <input type="text" name="name" class="required form-control input-lg" />
             </div>            
     
             <div class="form-row form-group" style="overflow:auto;" >

@@ -460,29 +460,6 @@ This template build on DevKit http://www.bootstraptor.com
 				      <form:errors path="username" cssStyle="color: #ff0000;"/>				     
 				  </div>				 
 				  
-				  <div class="form-group">
-				    <label for="firstName">First Name</label>
-				      <form:input path="firstName" type='text' name='firstName' class="form-control input-lg" placeholder="first name" id="firstName" disabled="true"/>
-				      <form:errors path="firstName" cssStyle="color: #ff0000;"/>				      
-				  </div>
-					
-				  <div class="form-group">
-				    <label for="middleInit">Middle Initial</label>
-				      <form:input path="middleInit" type='text' name='middleInit' class="form-control input-lg" placeholder="middle initial" id="middleInit" disabled="true"/>
-				      <form:errors path="middleInit" cssStyle="color: #ff0000;"/>				      
-				  </div>
-				  
-				  <div class="form-group">
-				    <label for="lastName">Last Name</label>
-				      <form:input path="lastName" type='text' name='lastName' class="form-control input-lg" placeholder="last name" id="lastName" disabled="true"/>
-				      <form:errors path="lastName" cssStyle="color: #ff0000;"/>				      
-				  </div>
-				  
-				  <div class="form-group">
-				    <label for="phoneNumber">Phone Number</label>
-				      <form:input path="phoneNumber" type='text' name='phoneNumber' class="form-control input-lg" placeholder="phone number" id="phoneNumber" disabled="true"/>
-				      <form:errors path="phoneNumber" cssStyle="color: #ff0000;"/>				      
-				  </div>
 				  
 				  <div class="form-group">
 				    <label for="email">Email Address</label>
@@ -605,6 +582,12 @@ This template build on DevKit http://www.bootstraptor.com
 							</div>
 							
 							<div class="form-group">
+							  <label for="phone">Phone Number</label>
+							  <form:input path="newAddress.phone" type='text' name='newAddress.phone' class="form-control input-lg" placeholder="phone number" id="newAddress.phone"/>
+							  <form:errors path="newAddress.phone" cssStyle="color: #ff0000;"/>
+							</div>
+							
+							<div class="form-group">
 							  <label for="CountrySelect">State</label>
 							  <form:select path="newAddress.state" name="newAddress.state" class="form-control">
 										<form:option value="default" selected="selected"> - Select State - </form:option>
@@ -664,10 +647,8 @@ This template build on DevKit http://www.bootstraptor.com
 							
 									
 									<form:hidden path="username" value="${username}"/>
-									<form:hidden path="firstName" value="${userFirstName}"/>
-									<form:hidden path="lastName"/>
 									<form:hidden path="email"/>
-									<form:hidden path="phoneNumber"/>
+
 									
 									<div class="form-group">
 										<div class="pull-left" style="padding-left: 17px; padding-top: 10px">

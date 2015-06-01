@@ -41,11 +41,11 @@ public class User implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private String username;
-	private Integer stripeId;
+	private String stripeId;
 	private String firstName;
-	private String middleInit;
-	private String lastName;
-	private String phoneNumber;
+	//private String middleInit;
+	//private String lastName;
+	//private String phoneNumber;
 	private String password;
 	private String passwordConf;
 	private String email;
@@ -61,28 +61,18 @@ public class User implements Serializable {
 	public User() {
 	}
 
-	public User(String username, String firstName, String middleInit, String lastName,
-			String phoneNumber, String password, String email, boolean enabled) {
+	public User(String username, String password, String email, boolean enabled) {
 		
 		this.username = username;
-		this.firstName = firstName;
-		this.middleInit = middleInit;
-		this.lastName = lastName;
-		this.phoneNumber = phoneNumber;
 		this.password = password;
 		this.email = email;
 		this.enabled = enabled;
 	}
 
-	public User(String username, String firstName, String middleInit, String lastName,
-			String phoneNumber, String password, String email, boolean enabled,
+	public User(String username, String password, String email, boolean enabled,
 			Set<UserRole> userRole) {
 		
 		this.username = username;
-		this.firstName = firstName;
-		this.middleInit = middleInit;
-		this.lastName = lastName;
-		this.phoneNumber = phoneNumber;
 		this.password = password;
 		this.email = email;
 		this.enabled = enabled;
@@ -100,11 +90,11 @@ public class User implements Serializable {
 	}
 	
 	@Column(name="stripe_id", unique = true, nullable = true)
-	public Integer getStripeId() {
+	public String getStripeId() {
 		return stripeId;
 	}
 
-	public void setStripeId(Integer stripeId) {
+	public void setStripeId(String stripeId) {
 		this.stripeId = stripeId;
 	}
 	
@@ -119,7 +109,8 @@ public class User implements Serializable {
 		this.userCart = userCart;
 	}
 	
-	@Column(name = "first_name", unique = false, nullable = false, length = 45)
+	/*
+	@Transient
 	public String getFirstName() {
 		return this.firstName;
 	}
@@ -127,6 +118,7 @@ public class User implements Serializable {
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
+	
 	
 	@Column(name = "middle_init", unique = false, nullable = true, length = 45)
 	public String getMiddleInit() {
@@ -154,6 +146,8 @@ public class User implements Serializable {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
+	
+	*/
 	
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "users")
 	public Set<Address> getAddresses() {

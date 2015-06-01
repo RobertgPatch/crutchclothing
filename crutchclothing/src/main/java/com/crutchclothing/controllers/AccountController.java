@@ -69,7 +69,7 @@ public class AccountController {
 		 if(!name.equalsIgnoreCase("anonymoususer")) {
 			 User user = userService.findUser(name);
 			 model.addAttribute("user", user);
-			 model.addAttribute("userFirstName", user.getFirstName());
+			 //model.addAttribute("userFirstName", user.getFirstName());
 			 model.addAttribute("username", user.getUsername());
 			 model.addAttribute("addressList", user.getAddresses());
 			 model.addAttribute("cartQty", user.getUserCart().getTotalQuantity());
@@ -82,13 +82,20 @@ public class AccountController {
 	}
 	
 	@RequestMapping(value="/edit-account")  
-    public String submitForm(@ModelAttribute("user") @Validated User user, BindingResult userResult, ModelMap model, RedirectAttributes redir) {  
+    public String submitForm(@ModelAttribute("user") @Validated User user, BindingResult userResult, 
+    		ModelMap model, RedirectAttributes redir, Principal auth) {  
        
-		String name = SecurityContextHolder.getContext().getAuthentication().getName();
+		String name = "Anonymoususer";
+		
+		if(auth != null) {
+			name = auth.getName();
+		}
+		
+		model.addAttribute("name", CrutchUtils.capitalizeName(name));
+		
 		String view = null;
 		
 		model.addAttribute("user", user);
-		
 		User oldUser = userService.findUser(name);
 		
 		model.addAttribute("username", oldUser.getUsername());
@@ -157,7 +164,7 @@ public class AccountController {
 			return "account";
 		}
 		else {
-			CrutchUtils.capitalizeAddress(user.getNewAddress());
+			//CrutchUtils.capitalizeAddress(user.getNewAddress());
 			userService.saveAddress(name, user.getNewAddress());
 			User updatedUser = userService.findUser(name);
 			model.addAttribute("user", foundUser);
@@ -174,7 +181,14 @@ public class AccountController {
 	
 	@RequestMapping(value="/delete-address", method = RequestMethod.POST)  
     public String removeAddress(@RequestParam("addressId") Integer addressId, ModelMap model, Principal auth) { 
-		String name = SecurityContextHolder.getContext().getAuthentication().getName();
+
+		String name = "Anonymoususer";
+		
+		if(auth != null) {
+			name = auth.getName();
+		}
+		
+		model.addAttribute("name", CrutchUtils.capitalizeName(name));
 		System.out.println();
 		userService.deleteAddress(name,addressId);
 		

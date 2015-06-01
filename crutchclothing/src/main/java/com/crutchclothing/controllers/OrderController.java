@@ -60,7 +60,9 @@ public class OrderController {
 	@RequestMapping(value="/checkout")
 	public String checkout(ModelMap model, Principal auth) {
 		//ModelAndView model = new ModelAndView("checkout");
-		System.out.println("Hello checkout");
+		
+		//Stripe.apiKey = "sk_test_JMHGITpDdOWOtIjc7sd9E0QH";
+		
 		if(order == null) {
 			order = new Order();
 		}
@@ -71,12 +73,22 @@ public class OrderController {
 			name = auth.getName();
 		}
 		
+		
+		/*
+		Customer cu = Customer.retrieve(user.getStripeId());
+		PaymentSource source = cu.getSources().retrieve({CARD_ID});
+		if (source.getObject().equals("card")) {
+		  Card card = (Card) source;
+		  // use the card!
+		}
+		*/
+		
 		model.addAttribute("name", capitalizeName(name));
 	    //System.out.println(name);
 	    
 	   if(!name.equalsIgnoreCase("anonymoususer")) {
 		  // ArrayList<CartProduct> cartProducts =
-			User user = userService.findUser(name);
+		   	User user = userService.findUser(name);
 			Cart cart = user.getUserCart();
 			model.addAttribute("order", order);
 			model.addAttribute("user", user);
@@ -90,7 +102,7 @@ public class OrderController {
 	}
 
 	
-	@RequestMapping(value="/verify-billing-info")  
+	//@RequestMapping(value="/verify-billing-info")  
     public String verifyBillingInfo(/*@ModelAttribute("order")*/ Order order/*, BindingResult userResult, */,ModelMap model, RedirectAttributes redir) {  
 		
 		String name = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -117,7 +129,7 @@ public class OrderController {
 		return "checkout";
 	}
 	
-	@RequestMapping(value="/verify-shipping-info")  
+	//@RequestMapping(value="/verify-shipping-info")  
     public String verifyShippingInfo(/*@ModelAttribute("order") */Order order,/* BindingResult shipAddressResult,*/ ModelMap model, RedirectAttributes redir) {  
 		
 		String name = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -150,10 +162,12 @@ public class OrderController {
 		Map<String, Object> customerParams = new HashMap<String, Object>();
 		customerParams.put("description", "Customer for test@example.com");
 		customerParams.put("email", "test@example.com");
-		//customerParams.put("source", stripeToken); // obtained with Stripe.js
+		customerParams.put("source", stripeToken); // obtained with Stripe.js
 
 		try {
-			Customer.create(customerParams);
+			Customer cust = Customer.create(customerParams);
+			
+			String cardId = cust.getDefaultSource();
 		} catch (AuthenticationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

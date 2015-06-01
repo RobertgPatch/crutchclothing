@@ -143,39 +143,7 @@
 				      <form:errors path="passwordConf" cssStyle="color: #ff0000;"/>				      
 				    </div>
 				  </div>
-				  
-				  <div class="form-group">
-				    <label for="firstName" class="col-sm-2 control-label">First Name</label>
-				    <div class="col-sm-10">
-				      <form:input path="firstName" type='text' name='firstName' class="form-control input-lg" placeholder="first name" id="firstName"/>
-				      <form:errors path="firstName" cssStyle="color: #ff0000;"/>				      
-				    </div>
-				  </div>
-					
-				  <div class="form-group">
-				    <label for="middleInit" class="col-sm-2 control-label">Middle Initial</label>
-				    <div class="col-sm-10">
-				      <form:input path="middleInit" type='text' name='middleInit' class="form-control input-lg" placeholder="middle initial" id="middleInit"/>
-				      <form:errors path="middleInit" cssStyle="color: #ff0000;"/>				      
-				    </div>
-				  </div>
-				  
-				  <div class="form-group">
-				    <label for="lastName" class="col-sm-2 control-label">Last Name</label>
-				    <div class="col-sm-10">
-				      <form:input path="lastName" type='text' name='lastName' class="form-control input-lg" placeholder="last name" id="lastName"/>
-				      <form:errors path="lastName" cssStyle="color: #ff0000;"/>				      
-				    </div>
-				  </div>
-				  
-				  <div class="form-group">
-				    <label for="phoneNumber" class="col-sm-2 control-label">Phone Number</label>
-				    <div class="col-sm-10">
-				      <form:input path="phoneNumber" type='text' name='phoneNumber' class="form-control input-lg" placeholder="phone number" id="phoneNumber"/>
-				      <form:errors path="phoneNumber" cssStyle="color: #ff0000;"/>				      
-				    </div>
-				  </div>
-				  
+	
 				  <div class="form-group">
 				    <label for="email" class="col-sm-2 control-label">Email Address</label>
 				    <div class="col-sm-10">

@@ -44,6 +44,8 @@ public class Order implements Serializable{
 	private DateTime orderDate;
 	private double salesTax;
 	private double orderTotal;
+	private double shippingPrice;
+	private String shippingMethod;
 	private String orderStatus;
 	private String shippingCompany;
 	private String trackingNumber;
@@ -147,6 +149,28 @@ public class Order implements Serializable{
 		this.shippingCompany = shippingCompany;
 	}
 	
+	@Column(name = "shipping_price", nullable = true)
+	public double getShippingPrice() {
+		return shippingPrice;
+	}
+
+
+	public void setShippingPrice(double shippingPrice) {
+		this.shippingPrice = shippingPrice;
+	}
+
+	
+	@Column(name = "shipping_method")
+	public String getShippingMethod() {
+		return shippingMethod;
+	}
+
+
+	public void setShippingMethod(String shippingMethod) {
+		this.shippingMethod = shippingMethod;
+	}
+
+
 	@Column(name = "tracking_number", nullable = true)
 	public String getTrackingNumber() {
 		return this.trackingNumber;
