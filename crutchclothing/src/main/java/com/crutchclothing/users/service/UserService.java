@@ -73,4 +73,8 @@ public class UserService {
 	public void deleteUser(String username) {
 		this.userDao.deleteUser(username);
 	}
+	
+	public String findStripeId(String username) {
+		return this.userDao.findStripeId(username);
+	}
 }

@@ -131,7 +131,7 @@ public class RegistrationController {
 	private String createStripeUser(String email) {
 		Stripe.apiKey = "sk_test_JMHGITpDdOWOtIjc7sd9E0QH";
 		Map<String, Object> customerParams = new HashMap<String, Object>();
-		customerParams.put("description", "Customer for test@example.com");
+		customerParams.put("description", "Stripe account created via crutchclothing.com");
 		customerParams.put("email", email);
 		//customerParams.put("source", stripeToken); // obtained with Stripe.js
 

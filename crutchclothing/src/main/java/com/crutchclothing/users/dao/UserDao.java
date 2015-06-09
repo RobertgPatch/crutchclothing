@@ -15,6 +15,8 @@ public interface UserDao {
 	
 	//void addUserWithCart(User user, Cart cart);
 	
+	String findStripeId(String email);
+	
 	void updateUser(String namne, User user);
 	
 	void saveAddress(String username, Address address);

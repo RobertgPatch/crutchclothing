@@ -179,6 +179,20 @@ public class UserDaoImpl implements UserDao {
 		
 	}
 	
+	@Override
+	@Transactional
+	public String findStripeId(String username) {
+		String id = null;
+		
+		User user = findByUserName(username);
+		
+		if(user != null) {
+			id = user.getStripeId();
+		}
+		
+		return id;
+	}
+	
 	public SessionFactory getSessionFactory() {
 		return this.sessionFactory;
 	}
@@ -186,6 +200,7 @@ public class UserDaoImpl implements UserDao {
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
+	
 	
 	
 

@@ -39,6 +39,8 @@
 	 <script type="text/javascript">
           Stripe.setPublishableKey('pk_test_Eb0m2uBHbsPfIarhifiMcBd1');
             $(document).ready(function() {
+            	
+            	
                 function addInputNames() {
                     // Not ideal, but jQuery's validate plugin requires fields to have names
                     // so we add them at the last possible minute, in case any javascript 
@@ -55,6 +57,8 @@
                 }
 
                 function submit(form) {
+                   
+                    alert("inside wrong part");
                     // remove the input field names for security
                     // we do this *before* anything else which might throw an exception
                     removeInputNames(); // THIS IS IMPORTANT!
@@ -82,9 +86,11 @@
                             var token = response['id'];
 
                             // insert the stripe token
-                            var input = $("<input name='stripeToken' value='" + token + "' style='display:none;' />");
+                            //var input = $("<input name='stripeToken' value='" + token + "' style='display:none;' />");
                             
-                            form.appendChild(input[0])
+                            //form.appendChild(input[0])
+                            
+                            document.getElementById("stripeTokenId").value = token;
 							
                             $("#collapseFive").collapse('hide');
 				   			$("#collapseSix").collapse('show');
@@ -95,6 +101,7 @@
                     });
                     
                     return false;
+                    
                 }
                 
                 // add custom rules for credit card validating
@@ -139,6 +146,15 @@
 <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700italic,700,500&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 <!-- /GOOGLE FONT-->
 <style type="text/css">
+
+	  .buttonLink {
+     	background:none!important;
+     	border:none; 
+     	padding:0!important;
+     	font: inherit;
+     	cursor: pointer;
+     	color: grey;
+}
       body {
 		font-family: 'Roboto', sans-serif;
 		
@@ -344,6 +360,26 @@
 	</form>
 	
 		<script>
+		
+			function toggler() {
+    	    	var e = document.getElementById("payDifferentCard");
+    	    	var pay = document.getElementById("paymentSelector");
+    	       if(e.style.display == 'block') {
+    	          	e.style.display = 'none';
+    	          	pay.style.display = 'block';
+    	          	document.getElementById("altPayment").innerHTML = "Pay with different card";
+    	       }    	       	
+    	       else {
+    	          e.style.display = 'block';
+    	          pay.style.display = 'none';
+    	          document.getElementById("altPayment").innerHTML = "Pay with saved card";
+    	          
+    	       }
+    	       
+    	       return false;
+    		}
+		
+		
 			function formSubmit() {
 				document.getElementById("logoutForm").submit();
 			}
@@ -377,9 +413,14 @@
 				}
 			
 			
+			function fillInPayment() {
+				var pay = document.getElementById("paymentCardIds").value;
+				document.getElementById("paymentId").value = pay;
+			}
 			function setFocusToTextBox(){
 			    document.getElementById("FirstName").focus();
 			}
+			
 			
 			function validateBillingAddress() {
 				select = document.getElementById('billAddresses'); // or in jQuery use: select = this;
@@ -448,6 +489,31 @@
 				}
 			}
 			
+			function validatePayment() {
+			   var payFields = document.getElementById('payDifferentCard');
+      	       if(payFields.style.display == 'none') {
+      	    	   var select = document.getElementById('paymentCardIds');
+      	    	   if(select.value) {
+      	          	 alert("select ok");
+      	          	 document.getElementById("paymentError").innerHTML = "";
+   				   	 $("#collapseFive").collapse('hide');
+   				     $("#collapseSix").collapse('show');
+   				     
+   				     $("#example-form").rules('remove', 'required')
+   				     var paymentId = document.getElementById('paymentCardIds').value;
+   				     document.getElementById("paymentId").value = paymentId;
+   				   
+   				     window.location.replace("#collapseSix");
+   				  }
+   				  else {
+   					document.getElementById("paymentError").innerHTML = "Please select a payment method";
+   				  }
+      	       }
+      	       else {
+      	    	 document.getElementById('paymentCardIds').value = "";
+      	       }
+			}
+
 			function submitCheckout() {
 				document.getElementById("example-form").submit();
 			}
@@ -1068,7 +1134,35 @@
  			<form:hidden path="billingAddress.id" id="billAddressId"/>
 			<form:hidden path="shippingAddress.id" id="shipAddressId"/>
 			<form:hidden path="shippingPrice" id="shippingPrice" />
+			<form:hidden path="user.username" id = "orderUsersEmail" value="${user.username}" />
+			<input name="stripeToken" value="" style='display:none;' id="stripeTokenId" />
+			
+			<input type="hidden" id="paymentId" name="paymentId" value=""/>
+			
+			
+			
 							
+			<c:if test="${not empty paymentCards}">
+			<legend>Choose payment method</legend>
+			<div class="form-group" id="paymentSelector">
+				<select class="form-control" id="paymentCardIds" onchange="fillInPayment()">
+					<option value="">--Select Saved Payment Method--</option>
+	   			<c:forEach var="card" items="${paymentCards}">
+	   					<option value="${card.fingerprint}">${card.brand}  **** ${card.last4}  Exp. ${card.expMonth}/${card.expYear}</option>
+	   				</c:forEach>
+				</select>
+				<span id="paymentError" style="color: #ff0000;" class="help-inline"></span>
+			</div>
+			</c:if>
+			
+			<button id="altPayment" type="button" onclick="toggler();" class="accordion-toggle buttonLink form-group" style="padding left:2%; padding-bottom:5%">
+           		Pay with different card
+			</button>
+        	
+        	<br>
+        	
+			<div id="payDifferentCard" style="display:none;">
+			
             <div class="form-row form-group">
                 <label for="name" class="stripeLabel">Your Name</label>
                 <input type="text" name="name" class="required form-control input-lg" />
@@ -1082,7 +1176,7 @@
             <div class="form-row form-group" style="display:inline-block; overflow:auto; height:auto;">
                 <div style="float:left;">
                 <label>Card Number</label>
-                <input type="text" maxlength="20" autocomplete="off" class="card-number stripe-sensitive required form-control input-lg" />
+                <input type="text" maxlength="20" autocomplete="off" class="card-number stripe-sensitive required form-control input-lg" id="cardNum" />
             	</div>
             </div>
             
@@ -1122,9 +1216,20 @@
                     </script>
                     
                 </div>
+                
+                <br>
+                
+                <div class="form-row form-group" style="display:inline-block; overflow:auto; height:auto; padding-left:1%;">
+                	<div style="float:left;">
+                	<form:checkbox path="savePaymentMethod" />   <strong>Save payment method?</strong>
+            	</div>
             </div>
+            </div>
+            
+            </div>
+            
 			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-            <button type="submit" name="submit-button" class="btn btn-info collapseFiveBtn">Continue</button>
+            <button type="button" name="submit-button" onclick="validatePayment()" class="btn btn-info collapseFiveBtn">Continue</button>
             <span class="payment-errors"></span>
         </form:form>
  

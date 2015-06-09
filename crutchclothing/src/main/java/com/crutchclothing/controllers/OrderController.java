@@ -3,6 +3,7 @@ package com.crutchclothing.controllers;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,11 @@ import com.stripe.exception.APIException;
 import com.stripe.exception.AuthenticationException;
 import com.stripe.exception.CardException;
 import com.stripe.exception.InvalidRequestException;
+import com.stripe.model.Card;
+import com.stripe.model.Charge;
 import com.stripe.model.Customer;
+import com.stripe.model.PaymentSource;
+import com.stripe.model.PaymentSourceCollection;
 
 @Controller
 public class OrderController {
@@ -95,7 +100,8 @@ public class OrderController {
 			model.addAttribute("cartQty", cart.getTotalQuantity());
 			model.addAttribute("cartProducts", new ArrayList<CartProduct>(cart.getCartProducts()));
 			model.addAttribute("addressList", user.getAddresses());
-			model.addAttribute("subtotal", cart.getTotal());
+			model.addAttribute("subtotal", cart.getTotal());			
+			model.addAttribute("paymentCards", listAllCards(user.getStripeId()));
 	   }
 
 	   return "checkout";
@@ -155,19 +161,116 @@ public class OrderController {
 	
 	@RequestMapping(value="/order", method = RequestMethod.POST)  
 	public String verifyShippingInfo(@RequestParam("stripeToken") String stripeToken, 
-			@ModelAttribute("order") Order order, ModelMap model) {  
+			@ModelAttribute("order") Order order, @RequestParam("paymentId") String paymentId,
+			ModelMap model) {  
 		
-		Stripe.apiKey = "sk_test_JMHGITpDdOWOtIjc7sd9E0QH";
+		
+		
+		if(!order.isSavePaymentMethod() && paymentId.equals("")) {
+			// charge card but dont save payment method to account
+			Stripe.apiKey = "sk_test_JMHGITpDdOWOtIjc7sd9E0QH";
+			Map<String, Object> chargeParams = new HashMap<String, Object>();
+			  chargeParams.put("amount", 400);
+			  chargeParams.put("currency", "usd");
+			  chargeParams.put("source", stripeToken); // obtained with Stripe.js
+			  chargeParams.put("description", "Charge for test@example.com");
 
+			  try {
+				Charge.create(chargeParams);
+			} catch (AuthenticationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvalidRequestException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (APIConnectionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (CardException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (APIException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return "home";
+		}
+		else if(!paymentId.equals("")) {
+			
+			Stripe.apiKey = "sk_test_JMHGITpDdOWOtIjc7sd9E0QH";
+
+			Customer cu;
+			
+			try {
+				cu = Customer.retrieve("cu_169UFYHJLsuihCliUJoLrzd2");
+				Map<String, Object> cardParams = new HashMap<String, Object>();
+				cardParams.put("limit", 3);
+				cardParams.put("object", "card");
+				PaymentSourceCollection paySourceCollection = cu.getSources().all(cardParams);
+				for (PaymentSource paySource : paySourceCollection.getData() ) {
+					Card card = (Card) paySource;
+					if(card.getFingerprint().equals(paymentId)) {
+						//charge card
+					}
+				}
+				
+				System.out.println();
+			} catch (AuthenticationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvalidRequestException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (APIConnectionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (CardException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (APIException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return "home";
+		}
+		else {
+			
+		Stripe.apiKey = "sk_test_JMHGITpDdOWOtIjc7sd9E0QH";
+		
+		String username = order.getUser().getUsername();
+		
 		Map<String, Object> customerParams = new HashMap<String, Object>();
 		customerParams.put("description", "Customer for test@example.com");
 		customerParams.put("email", "test@example.com");
 		customerParams.put("source", stripeToken); // obtained with Stripe.js
-
+		
+		String stripeId = null;
 		try {
-			Customer cust = Customer.create(customerParams);
+			if((stripeId = userService.findStripeId(username)) != null) {
+				Customer cust = Customer.retrieve(stripeId);
+				Map<String, Object> params = new HashMap<String, Object>();
+				params.put("source", stripeToken);
+				cust.createCard(params);
+				
+				PaymentSource source = cust.getSources().retrieve(cust.getDefaultSource());
+				if (source.getObject().equals("card")) {
+				  Card card = (Card) source;
+				  Map<String, Object> chargeParams = new HashMap<String, Object>();
+				  chargeParams.put("amount", 400); //amount in cents
+				  chargeParams.put("currency", "usd");
+				  String s = cust.getDefaultCard();
+				  System.out.println(card.getId());
+				  chargeParams.put("customer", stripeId);
+				  chargeParams.put("source", card.getId()); // obtained with Stripe.js
+				  chargeParams.put("description", "Charge for test@example.com");
+
+				  Charge.create(chargeParams);
+				}
+				
+				
+			}
 			
-			String cardId = cust.getDefaultSource();
 		} catch (AuthenticationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -185,7 +288,9 @@ public class OrderController {
 			e.printStackTrace();
 		}
 		
-		return "welcome";
+		return "home";
+		}
+		//return "home";
 	}
 		
 	public String createOrder(){
@@ -199,6 +304,40 @@ public class OrderController {
 	private String capitalizeName(String name) {
 		String formattedName = name.substring(0,1).toUpperCase() + name.substring(1, name.length()).toLowerCase();
 		return formattedName;
+	}
+	
+	private List<PaymentSource> listAllCards(String stripeId) {
+		
+		Stripe.apiKey = "sk_test_JMHGITpDdOWOtIjc7sd9E0QH";
+		
+		List<PaymentSource> cards = null;
+		Customer cu;
+		try {
+			cu = Customer.retrieve(stripeId);
+			Map<String, Object> cardParams = new HashMap<String, Object>();
+			//cardParams.put("limit", 3);
+			cardParams.put("object", "card");
+			cards = cu.getSources().all(cardParams).getData();
+			
+		} catch (AuthenticationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidRequestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (APIConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CardException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (APIException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return cards;
+		
 	}
 	
 	public void setUserService(UserService userService) {

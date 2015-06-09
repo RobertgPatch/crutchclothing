@@ -113,8 +113,9 @@ public class CartController {
 		
 	   if(!name.equalsIgnoreCase("anonymoususer")) {
 			User user = userService.findUser(name);
+			Cart cart = user.getUserCart();
 			model.addAttribute("user", user);
-			model.addAttribute("cartQuan", user.getUserCart().getTotalQuantity());
+			model.addAttribute("cartQuan", cart.getTotalQuantity());
 			ProductDetail productDetail = new ProductDetail();
 			model.addAttribute("productDetail", productDetail);
 	   }
@@ -167,13 +168,15 @@ public class CartController {
 		User user = null;
 		Product product = null;
 		user = userService.findUser(name);
+		Cart cart = user.getUserCart();
 		product = productService.findProduct(productId);
 		model.addAttribute("id", productId);
     	model.addAttribute("user", user); 
     	model.addAttribute("name", capitalizeName(user.getUsername()));
     	model.addAttribute("product", productService.findProduct(productId));
-    	model.addAttribute("productDetail", new ProductDetail());
-    	model.addAttribute("cartQuan", user.getUserCart().getTotalQuantity());
+    	//model.addAttribute("productDetail", new ProductDetail());
+    	model.addAttribute("productDetail", productDetail);
+    	model.addAttribute("cartQuan", cart.getTotalQuantity());
     	model.addAttribute("org.springframework.validation.BindingResult.productDetail", result);
 		if(result.hasErrors()) {
 			//user = userService.findUser(name);
@@ -386,4 +389,7 @@ public class CartController {
 		}
 	*/
 	
+	private boolean checkCardExists() {
+		return false;
+	}
 }

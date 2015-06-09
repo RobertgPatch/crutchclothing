@@ -54,6 +54,7 @@ public class Order implements Serializable{
 	private Set<OrderLine> orderLines = new HashSet<OrderLine>();
 	private Address billingAddress;
 	private Address shippingAddress;
+	private boolean savePaymentMethod;
 	
 	public Order() {
 		
@@ -230,6 +231,19 @@ public class Order implements Serializable{
 	public void setShippingAddress(Address shippingAddress) {
 		this.shippingAddress = shippingAddress;
 	}
+
+	@Transient
+	public boolean isSavePaymentMethod() {
+		return savePaymentMethod;
+	}
+
+
+	public void setSavePaymentMethod(boolean savePaymentMethod) {
+		this.savePaymentMethod = savePaymentMethod;
+	}
+	
+	
+	
 
 	/*
 	public void addProduct(Product product) {
