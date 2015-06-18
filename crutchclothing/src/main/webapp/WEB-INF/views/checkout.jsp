@@ -506,6 +506,8 @@
    				     window.location.replace("#collapseSix");
    				  }
    				  else {
+   					  alert("about to submit form");
+   					document.getElementById("example-form").submit();
    					document.getElementById("paymentError").innerHTML = "Please select a payment method";
    				  }
       	       }
@@ -858,102 +860,7 @@
 								<span id="shippingError" style="color: #ff0000;" class="help-inline"></span>
 							</div>
 							</c:if>
-							
-							<!-- 
-							<div class="form-group">
-							  <label for="shipFirstName">First Name</label>
-							  <form:input type="text" path="shippingAddress.firstName" class="form-control" id="shipFirstName" placeholder="Enter First Name" disabled="true"/>
-							</div>
-							<div class="form-group">
-							  <label for="shipLastName">Last Name</label>
-							  <form:input type="text" path="shippingAddress.lastName" class="form-control" id="shipLastName" placeholder="Enter Last Name"/>	
-							</div>
-							<div class="form-group">
-							  <label for="Company">Company</label>
-							  <input type="text" path="shippingAddress.company" class="form-control" id="shipCompany" placeholder="Enter Company">
-							</div>
-							<div class="form-group">
-							  <label for="shipAddress1">Address1</label>
-							  <form:input type="text" path="shippingAddress.address1" class="form-control" id="shipAddress1" placeholder="Enter Address 1"/>
-							</div>
-							
-							<div class="form-group">
-							  <label for="Adress2">Adress 2</label>
-							  <input type="text" class="form-control" id="shipAddress2" placeholder="Enter Adress 2">
-							</div>	
-							
-							<div class="form-group">
-							  <label for="Adress3">Adress 3</label>
-							  <input type="text" class="form-control" id="shipAddress3" placeholder="Enter Adress 3">	
-							</div>
-							<div class="form-group">
-							  <label for="City">City</label>
-							  <input type="text" path="shippingAddress.city" class="form-control" id="shipCity" placeholder="Enter City">
 				
-							</div>
-						
-							<div class="form-group">
-							  <label for="CountrySelect">State</label>
-							  <form:select id="shipState" path="shippingAddress.state" class="form-control" name="CountrySelect">
-										<form:option value="default" selected="selected"> - Select State - </form:option>
-										<form:option value="Alabama">Alabama</form:option>
-										<form:option value="Alaska">Alaska</form:option>
-										<form:option value="Arizona">Arizona</form:option>
-										<form:option value="Arkansas">Arkansas</form:option>
-										<form:option value="California">California</form:option>
-										<form:option value="Colorado">Colorado</form:option>
-										<form:option value="Connecticut">Connecticut</form:option>
-										<form:option value="Delaware">Delaware</form:option>
-										<form:option value="Florida">Florida</form:option>
-										<form:option value="Georgia">Georgia</form:option>
-										<form:option value="Hawaii">Hawaii</form:option>
-										<form:option value="Idaho">Idaho</form:option>
-										<form:option value="Illinois">Illinois</form:option>
-										<form:option value="Indiana">Indiana</form:option>
-										<form:option value="Iowa">Iowa</form:option>
-										<form:option value="Kansas">Kansas</form:option>
-										<form:option value="Kentucky">Kentucky</form:option>
-										<form:option value="Louisiana">Louisiana</form:option>
-										<form:option value="Maine">Maine</form:option>
-										<form:option value="Maryland">Maryland</form:option>
-										<form:option value="Massachusetts">Massachusetts</form:option>
-										<form:option value="Michigan">Michigan</form:option>
-										<form:option value="Minnesota">Minnesota</form:option>
-										<form:option value="Mississippi">Mississippi</form:option>
-										<form:option value="Missouri">Missouri</form:option>
-										<form:option value="Montana">Montana</form:option>
-										<form:option value="Nebraska">Nebraska</form:option>
-										<form:option value="Nevada">Nevada</form:option>
-										<form:option value="New Hampshire">New Hampshire</form:option>
-										<form:option value="New Jersey">New Jersey</form:option>
-										<form:option value="New Mexico">New Mexico</form:option>
-										<form:option value="New York">New York</form:option>
-										<form:option value="North Carolina">North Carolina</form:option>
-										<form:option value="North Dakota">North Dakota</form:option>
-										<form:option value="Ohio">Ohio</form:option>
-										<form:option value="Oklahoma">Oklahoma</form:option>
-										<form:option value="Oregon">Oregon</form:option>
-										<form:option value="Pennsylvania">Pennsylvania</form:option>
-										<form:option value="Rhode Island">Rhode Island</form:option>
-										<form:option value="South Carolina">South Carolina</form:option>
-										<form:option value="South Dakota">South Dakota</form:option>
-										<form:option value="Tennessee">Tennessee</form:option>
-										<form:option value="Texas">Texas</form:option>
-										<form:option value="Utah">Utah</form:option>
-										<form:option value="Vermont">Vermont</form:option>
-										<form:option value="Virginia">Virginia</form:option>
-										<form:option value="Washington">Washington</form:option>
-										<form:option value="West Virginia">West Virginia</form:option>
-										<form:option value="Wisconsin">Wisconsin</form:option>
-										<form:option value="Wyoming">Wyoming</form:option>
-									</form:select>	
-							</div>
-							
-							<div class="form-group">
-							  <label for="PostCode">Post Code</label>
-							  <input type="text" path="shippingAddress.zipcode" class="form-control" id="shipPostCode" placeholder="Enter Post Code">	
-							</div>
-							 -->
 							 
 							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>							
 							
@@ -1132,14 +1039,15 @@
      	<form:form action="/order" method="post" commandName="order" id="example-form" style="display: none;">
  			
  			<form:hidden path="billingAddress.id" id="billAddressId"/>
-			<form:hidden path="shippingAddress.id" id="shipAddressId"/>
-			<form:hidden path="shippingPrice" id="shippingPrice" />
-			<form:hidden path="user.username" id = "orderUsersEmail" value="${user.username}" />
+ 			<form:hidden path="orderTotal" id="orderTotal" value="${orderTotalAmount}"/>
+			<form:hidden path="shipment.shippingAddress.id" id="shipAddressId"/>
+			<form:hidden path="shipment.shippingPrice" id="shippingPrice" />
+			<form:hidden path="user.username" id = "orderUsername" value="${user.username}" />
+			<form:hidden path="user.email" id = "orderUsersEmail" value="${user.email}" />
 			<input name="stripeToken" value="" style='display:none;' id="stripeTokenId" />
 			
 			<input type="hidden" id="paymentId" name="paymentId" value=""/>
-			
-			
+
 			
 							
 			<c:if test="${not empty paymentCards}">
@@ -1221,7 +1129,7 @@
                 
                 <div class="form-row form-group" style="display:inline-block; overflow:auto; height:auto; padding-left:1%;">
                 	<div style="float:left;">
-                	<form:checkbox path="savePaymentMethod" />   <strong>Save payment method?</strong>
+                	<form:checkbox path="cardSaved" />   <strong>Save payment method?</strong>
             	</div>
             </div>
             </div>

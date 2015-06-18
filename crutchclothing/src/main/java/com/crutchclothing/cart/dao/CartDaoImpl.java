@@ -220,6 +220,15 @@ public class CartDaoImpl implements CartDao {
 		
 		return cpr;
 	}
+
+	@Override
+	@Transactional
+	public Cart findCart(String email) {
+		
+		String hql = "from Cart where User.email = ?";
+		
+		return null;
+	}
 		
 		
 }

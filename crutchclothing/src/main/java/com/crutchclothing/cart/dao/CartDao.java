@@ -14,6 +14,8 @@ public interface CartDao {
 	public Cart createCart();
 	
 	public Cart findCart(Integer cart_id);
+	
+	public Cart findCart(String email);
 		  
 	public void save(Cart cart);
 

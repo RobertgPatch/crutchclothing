@@ -129,14 +129,15 @@ public class RegistrationController {
 	}
 	*/
 	private String createStripeUser(String email) {
+		
+		String custId = null;
 		Stripe.apiKey = "sk_test_JMHGITpDdOWOtIjc7sd9E0QH";
 		Map<String, Object> customerParams = new HashMap<String, Object>();
 		customerParams.put("description", "Stripe account created via crutchclothing.com");
 		customerParams.put("email", email);
-		//customerParams.put("source", stripeToken); // obtained with Stripe.js
 
 		try {
-			return Customer.create(customerParams).getId();
+			custId = Customer.create(customerParams).getId();
 		} catch (AuthenticationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -153,7 +154,7 @@ public class RegistrationController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
+		return custId;
 	}
 	
 	

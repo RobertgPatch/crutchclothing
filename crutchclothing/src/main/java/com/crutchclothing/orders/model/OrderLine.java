@@ -87,6 +87,11 @@ public class OrderLine implements Serializable {
 	@Embeddable
 	public static class Id implements Serializable {
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		@Column(name = "product_id")
 		private Integer productId;
 		
@@ -133,6 +138,8 @@ public class OrderLine implements Serializable {
 	public OrderLine(Product product, Order order) {
 		this.product = product;
 		this.order = order;
+		this.productQuantity = 0;
+		this.subtotal = 0;
 		this.getId().productId = product.getId();
 		this.getId().orderId = order.getId();
 	}

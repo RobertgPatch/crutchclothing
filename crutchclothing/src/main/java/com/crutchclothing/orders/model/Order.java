@@ -38,23 +38,16 @@ public class Order implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private final static double TAX_RATE = 8.25;
 	private Integer id;
-	private String username;
 	private Integer orderNumber;
-	private LocalDate shipDate;
 	private DateTime orderDate;
 	private double salesTax;
 	private double orderTotal;
-	private double shippingPrice;
-	private String shippingMethod;
 	private String orderStatus;
-	private String shippingCompany;
-	private String trackingNumber;
 	private User user;
-	//private Set<Product> products = new HashSet<>();
 	private Set<OrderLine> orderLines = new HashSet<OrderLine>();
+	private Shipment shipment;
 	private Address billingAddress;
-	private Address shippingAddress;
-	private boolean savePaymentMethod;
+	private boolean cardSaved;
 	
 	public Order() {
 		
@@ -82,15 +75,6 @@ public class Order implements Serializable{
 		this.orderNumber = orderNumber;
 	}
 	
-	@Columns(columns = { @Column(name = "ship_date", nullable = false) })
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-    public LocalDate getShipDate() {
-		return this.shipDate;
-	}
-	
-	public void setShipDate(LocalDate shipDate) {
-		this.shipDate = shipDate;
-	}
 	
 	@Columns(columns = { @Column(name = "order_date_time", nullable = false),
     @Column(name = "order_date_time_zone", nullable = false) })
@@ -121,6 +105,7 @@ public class Order implements Serializable{
 	@Column(name = "order_total", nullable = true)
 	public double getOrderTotal() {
 		List<OrderLine> oLines = new ArrayList<OrderLine>(this.orderLines);
+		this.orderTotal = 0;
 		for(int i = 0; i < oLines.size(); i++){
 			this.orderTotal += oLines.get(i).getSubtotal();
 		}
@@ -141,45 +126,7 @@ public class Order implements Serializable{
 		this.orderStatus = orderStatus;
 	}
 	
-	@Column(name = "shipping_co", nullable = true)
-	public String getShippingCompany() {
-		return this.shippingCompany;
-	}
 	
-	public void setShippingCompany(String shippingCompany) {
-		this.shippingCompany = shippingCompany;
-	}
-	
-	@Column(name = "shipping_price", nullable = true)
-	public double getShippingPrice() {
-		return shippingPrice;
-	}
-
-
-	public void setShippingPrice(double shippingPrice) {
-		this.shippingPrice = shippingPrice;
-	}
-
-	
-	@Column(name = "shipping_method")
-	public String getShippingMethod() {
-		return shippingMethod;
-	}
-
-
-	public void setShippingMethod(String shippingMethod) {
-		this.shippingMethod = shippingMethod;
-	}
-
-
-	@Column(name = "tracking_number", nullable = true)
-	public String getTrackingNumber() {
-		return this.trackingNumber;
-	}
-	
-	public void setTrackingNumber(String trackingNumber) {
-		this.trackingNumber = trackingNumber;
-	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "username", nullable = false) 
@@ -221,28 +168,26 @@ public class Order implements Serializable{
 		this.billingAddress = billingAddress;
 	}
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "shipping_address_id")
-	public Address getShippingAddress() {
-		return this.shippingAddress;
-	}
-	
-	 
-	public void setShippingAddress(Address shippingAddress) {
-		this.shippingAddress = shippingAddress;
-	}
 
 	@Transient
-	public boolean isSavePaymentMethod() {
-		return savePaymentMethod;
+	public boolean isCardSaved() {
+		return this.cardSaved;
 	}
 
 
-	public void setSavePaymentMethod(boolean savePaymentMethod) {
-		this.savePaymentMethod = savePaymentMethod;
+	public void setCardSaved(boolean cardSaved) {
+		this.cardSaved = cardSaved;
 	}
 	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "order_id")
+	public Shipment getShipment() {
+		return this.shipment;
+	}
 	
+	public void setShipment(Shipment shipment) {
+		this.shipment = shipment;
+	}
 	
 
 	/*
@@ -290,5 +235,9 @@ public class Order implements Serializable{
 	    
 	     return true;
 	 }
-	 */
+	 
+	public enum OrderStatus {
+		
+	}
+	*/
 }

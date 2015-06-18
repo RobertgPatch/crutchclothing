@@ -33,7 +33,7 @@ public class OrderDaoImpl implements OrderDao {
 			}
 		}
 		*/
-		sessionFactory.getCurrentSession().persist(order);
+		sessionFactory.getCurrentSession().save(order);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -70,10 +70,9 @@ public class OrderDaoImpl implements OrderDao {
 	}
 	
 	@Override
-	@SuppressWarnings("unchecked")
 	@Transactional
 	public void saveOrderLine(OrderLine orderLine) {
-		sessionFactory.getCurrentSession().persist(orderLine);
+		sessionFactory.getCurrentSession().save(orderLine);
 	}
 
 	
