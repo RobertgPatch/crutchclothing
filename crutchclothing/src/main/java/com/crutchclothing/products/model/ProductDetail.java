@@ -7,6 +7,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -20,6 +22,7 @@ import javax.persistence.Transient;
 
 import com.crutchclothing.cart.model.CartProduct;
 import com.crutchclothing.cart.model.CartProductRef;
+import com.crutchclothing.inventory.Inventory;
 import com.crutchclothing.users.model.Address;
 import com.crutchclothing.users.model.User;
 
@@ -31,32 +34,43 @@ import com.crutchclothing.users.model.User;
 		private static final long serialVersionUID = 1L;
 		
 		private Integer id; // primary key
+		//private String size;
 		private String size;
-		private String color;
 		private int quantity;
 		private Product product;
+		private Inventory currentInventory;
+		private Set<Inventory> dailyInventory;
 		private Set<CartProductRef> cartProductRefs = new HashSet<CartProductRef>(0);
+		
+		/*
+		@Transient
+		private static final String SIZE_SMALL = "small";
+		@Transient
+		private static final String SIZE_MEDIUM = "medium";
+		@Transient
+		private static final String SIZE_LARGE = "large";
+		@Transient
+		private static final String SIZE_XLARGE = "xlarge";
+		*/
 		//private Set<CartProduct> cartProducts = new HashSet<>(0);
 		//private CartProduct cartProduct;
 		
 	 public ProductDetail() {
 	 }
 
-	 public ProductDetail(Product product, String size, String color, int quantity) 
+	 public ProductDetail(Product product, String size, int quantity) 
 	 {
 	  this.product = product;
 	  this.size = size;
-	  this.color = color;
 	  this.quantity = quantity;
 	 }
 	 
 	 public ProductDetail(Product product, Set<CartProductRef> cartProductRefs, String size, 
-			 String color, int quantity) 
+			 int quantity) 
 	 {
 	  this.product = product;
 	  this.cartProductRefs = cartProductRefs;
 	  this.size = size;
-	  this.color = color;
 	  this.quantity = quantity;
 	 }
 	 
@@ -77,24 +91,14 @@ import com.crutchclothing.users.model.User;
 	 	this.id = id;
 	 }
 	 
-	 @Column(name="product_size", nullable = false)
+	 @Column(name="size", nullable = false)
 	 public String getSize() {
 		 return this.size;
 	 }
 	 
 	 public void setSize(String size) {
 		 this.size = size;
-	 }
-
-	 @Column(name="product_color", nullable = true)
-	 public String getColor() {
-		 return this.color;
-	 }
-	 
-	 public void setColor(String color) {
-		 this.color = color;
-	 }
-	 
+	 }	 
 	
 	 //@Column(name="product_quantity", nullable = true)
 	 @Transient
@@ -137,9 +141,29 @@ import com.crutchclothing.users.model.User;
 	 public void setCartProductRefs(Set<CartProductRef> cartProductRefs) {
 		 this.cartProductRefs = cartProductRefs;
 	 }
-	 //public enum Size {
-	// S, M, L, XL
-	 //}
+	 
+	 @Transient
+	 public Inventory getCurrentInventory() {
+		if(dailyInventory == null) {
+			return null;
+		}
+		currentInventory = dailyInventory.iterator().next();
+		
+		return currentInventory;
+	 }
+
+	 public void setCurrentInventory(Inventory currentInventory) {
+		this.currentInventory = currentInventory;
+	 }
+
+	 @OneToMany(fetch = FetchType.EAGER, mappedBy = "productDetail")
+	 public Set<Inventory> getDailyInventory() {
+		 return this.dailyInventory;
+	 }
+	 
+	 public void setDailyInventory(Set<Inventory> dailyInventory) {
+		 this.dailyInventory = dailyInventory;
+	 }
 	 
 
 	}

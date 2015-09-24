@@ -30,9 +30,11 @@ public class ProductDetailValidator implements Validator {
         //ValidationUtils.
         ProductDetail productDetail = (ProductDetail) obj;
         
+        /*
         if(productDetail.getColor().equalsIgnoreCase("default")){
         	errors.rejectValue("color", "valid.color", "Please select a color.");
         }
+        */
         
         //int val = productDetail.getQuantity();
         if(productDetail.getQuantity() <= 0){

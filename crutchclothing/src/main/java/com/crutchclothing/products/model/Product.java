@@ -13,9 +13,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+
+
+import javax.persistence.Transient;
 
 import com.crutchclothing.cart.model.CartProduct;
 import com.crutchclothing.inventory.Inventory;
@@ -38,6 +43,10 @@ public class Product implements Serializable  {
 	private Set<OrderLine> orderLines = new HashSet<OrderLine>();
 	private Set<CartProduct> cartProducts = new HashSet<CartProduct>();
 	private Set<Inventory> dailyInventory = new HashSet<Inventory>();
+	private Set<Color> productColors = new HashSet<Color>();
+	private Inventory currentInventory;
+	// TODO setters and getters for todayInventory
+	
 	private Category category;
 	//private Set<Order> orders = new HashSet<>();
 	
@@ -197,15 +206,16 @@ public class Product implements Serializable  {
  public void setCartProducts(Set<CartProduct> cartProducts) {
 	 this.cartProducts = cartProducts;
  }
- 
- @OneToMany(fetch = FetchType.EAGER, mappedBy = "product")
- public Set<Inventory> getDailyInventory() {
-	 return this.dailyInventory;
+
+ @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "products")
+ public Set<Color> getProductColors() {
+	return productColors;
+ }
+
+ public void setProductColors(Set<Color> productColors) {
+	this.productColors = productColors;
  }
  
- public void setDailyInventory(Set<Inventory> dailyInventory) {
-	 this.dailyInventory = dailyInventory;
- }
  
  /*
  @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
@@ -267,5 +277,10 @@ public class Product implements Serializable  {
      return true;
  }
 */
+
+ 
 }
+
+
+
 

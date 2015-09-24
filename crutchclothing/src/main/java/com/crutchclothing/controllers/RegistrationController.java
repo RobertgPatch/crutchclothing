@@ -74,10 +74,7 @@ public class RegistrationController {
 	@RequestMapping(value="/registration")  
     public ModelAndView initForm() {  
 		ModelAndView model = new ModelAndView("registration");
-		//Address address = new Address();
 		User user = new User();
-		//user.getAddresses().add(address);
-		//user.setPrimaryAddress(address);
 		model.addObject("user", user);
         return model;
        
@@ -96,13 +93,10 @@ public class RegistrationController {
         	user.setPassword(passwordEncoder.encode(user.getPassword()));
         	Cart cart = new Cart();
         	user.setUserCart(cart);
-        	//formatUser(user);
         	user.setEmail(user.getEmail().toLowerCase());
-        	String stripeId = createStripeUser(user.getEmail());
-    		user.setStripeId(stripeId);
+    		user.setStripeId(createStripeUser(user.getEmail()));
             userService.addUser(user);
             model.addAttribute("name", user.getUsername());
-            //userService.saveAddress(address);
             authenticateUserAndSetSession(user, request);
             return "registrationsuccess";
         }

@@ -302,9 +302,9 @@
 									<li class="a text-left"><a href="cart"><span class="glyphicon glyphicon-shopping-cart"></span></a>${cartQuan }</li>
 								</c:if>
 								<c:if test="${name == 'Anonymoususer'}">
-									<li class="a text-left"><a href="checkout"><span class="glyphicon glyphicon-shopping-cart"></span></a>0</li>
+									<li class="a text-left"><a href="cart"><span class="glyphicon glyphicon-shopping-cart"></span></a>0</li>
 								</c:if>
-								<li><a href="#">Checkout</a></li>						
+								<li><a href="checkout">Checkout</a></li>						
 							</ul>							
 						</div>	
 					</div>

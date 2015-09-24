@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -38,14 +40,12 @@ public class CartProductDetail implements Serializable  {
  {
   this.cartProduct = cartProduct;
   this.size = size;
-  this.color = color;
   this.quantity = quantity;
  }
  
  public CartProductDetail(CartProduct cartProduct, ProductDetail productDetail) {
 	 this.cartProduct = cartProduct;
 	 this.size = productDetail.getSize();
-	 this.color = productDetail.getColor();
 	 this.quantity = productDetail.getQuantity();
 	 this.name = cartProduct.getProduct().getName();
  }
@@ -62,6 +62,7 @@ public class CartProductDetail implements Serializable  {
  	this.id = id;
  }
  
+
  @Column(name="cart_product_size", nullable = false)
  public String getSize() {
 	 return this.size;
@@ -69,15 +70,6 @@ public class CartProductDetail implements Serializable  {
  
  public void setSize(String size) {
 	 this.size = size;
- }
-
- @Column(name="cart_product_color", nullable = true)
- public String getColor() {
-	 return this.color;
- }
- 
- public void setColor(String color) {
-	 this.color = color;
  }
  
  @Column(name="cart_product_quantity", nullable = true)

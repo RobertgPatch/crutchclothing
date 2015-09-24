@@ -108,14 +108,16 @@
 			</div>
         </div>
         
+        <br>
         
-         <div class="container">
-       	   <div class="main">
-       	   	 <div class="row">
-	       	   	<div class="col-md-12 text-center">
-			 		<h2>Registration</h2>
-			 	</div>	
-		 	</div>
+		 <div class="container">
+		<div class="panel panel-default">
+		<div class="panel-heading">
+			<h2>Registration</h2>
+		</div>
+		 	
+		 	<div class="panel-body">
+				
        	     <form:form class="form-horizontal col-md-12 center-block" method="post" modelAttribute="user" commandName="user" action="process-user.html">
        	     	 
        	     	 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
@@ -162,10 +164,10 @@
 				 
               
 			 </form:form>
-
-           </div>
+    
        </div>
-       
+       </div>
+       </div>
 
 		
           <div class="modal-footer">

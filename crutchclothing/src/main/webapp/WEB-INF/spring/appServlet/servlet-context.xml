@@ -27,10 +27,7 @@
 	</beans:bean>
 	
  	
-	<beans:bean id="orderController"
-				class="com.crutchclothing.controllers.OrderController">
-			<beans:property name="userService" ref="userService" />			
-	</beans:bean>
+	
 	
 	
 	<beans:bean id="userService"
@@ -65,7 +62,8 @@
 	
 		<beans:bean id="homeController"
 				class="com.crutchclothing.controllers.HomeController">
-			<beans:property name="userService" ref="userService" />			
+			<beans:property name="userService" ref="userService" />
+			<beans:property name="productService" ref="productService" />			
 	</beans:bean>
 	
 	<beans:bean id="cartController"
@@ -74,6 +72,13 @@
 			<beans:property name="cartService" ref="cartService" />
 			<beans:property name="productService" ref="productService" />
 			<beans:property name="validator" ref="productDetailValidator" />			
+	</beans:bean>
+	
+	<beans:bean id="orderController"
+				class="com.crutchclothing.controllers.OrderController">
+			<beans:property name="userService" ref="userService" />
+			<beans:property name="cartService" ref="cartService" />
+			<beans:property name="orderService" ref="orderService" />			
 	</beans:bean>
 	
 	<mvc:resources mapping="/resources/**" location="/resources/crutch_resources/" />

@@ -1,8 +1,23 @@
 <%@taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>  
 <html>
 	<head>
 		<title>Crutch Clothing - SF Based Appperal</title>
+		
+
+    <!-- MetisMenu CSS -->
+    <link href="/resources/css/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Timeline CSS -->
+    <link href="/resources/css/timeline.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/resources/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="/resources/css/morris.css" rel="stylesheet">
+    
 		<link href="/resources/css/bootstrap.min.css" rel='stylesheet' type='text/css' />
 		<link href="/resources/css/bootstrap.css" rel='stylesheet' type='text/css' />
 		<link href="/resources/css/theme.css" rel='stylesheet' type='text/css' />
@@ -11,6 +26,7 @@
 
 		<!----webfonts---->
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,300' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 		<!----//webfonts---->
 
 		<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
@@ -58,6 +74,16 @@
 		<script src="<c:url value="/resources/js/custom.js" />"></script>
 		
 
+    <!-- Metis Menu Plugin JavaScript -->
+	<script src="<c:url value="/resources/js/metisMenu.min.js" />"></script>
+    <!-- Morris Charts JavaScript -->
+    <script src="<c:url value="/resources/js/raphael-min.js" />"></script>
+    <script src="<c:url value="/resources/js/morris.min.js" />"></script>
+	<script src="<c:url value="/resources/js/morris-data.js" />"></script>
+    <!-- Custom Theme JavaScript -->
+    <script src="<c:url value="/resources/js/sb-admin-2.js" />"></script>
+		
+
 
 
     
@@ -103,7 +129,14 @@
              //});
         
        // });
-        
+        $('#addUserModal').modal({
+  show: true,
+ }).css({
+        'height': '900px',
+        'margin-left': function () {
+            return -($(this).width() / 2);
+        }
+    });
         
         
         </script>
@@ -169,8 +202,19 @@
         
         </script>
         
-        
-         
+        <style>
+        	.modal-body .form-horizontal .col-sm-2,
+			.modal-body .form-horizontal .col-sm-10 {
+			    width: 100%
+			}
+			
+			.modal-body .form-horizontal .control-label {
+			    text-align: left;
+			}
+			.modal-body .form-horizontal .col-sm-offset-2 {
+			    margin-left: 15px;
+			}
+        </style>
 
         
     </head>
@@ -262,13 +306,14 @@
 							</ul>							
 						</div>	
 					</div>
+
 					<!----start-images-slider---->	
 				  <!-- Single button -->
       
 				</div>
 			</div>
         </div>
-
+        
 	<c:url value="/logout" var="logoutUrl" />
 	<form action="${logoutUrl}" method="post" id="logoutForm">
 		<input type="hidden" name="${_csrf.parameterName}"
@@ -282,19 +327,174 @@
 
 	
 	
+	<div class="container">
+	<div class="panel panel-default">
+	<div class="panel-heading">
+		
+		<h2><i class="fa fa-tachometer fa-2x"></i>  Admin Dashboard</h2>
+	</div>
 	
 	
-	<div class="row-fluid sortable">		
-				<div class="box span12">
-					<div class="box-header" data-original-title>
-						<h2><i class="halflings-icon white user"></i><span class="break"></span>Members</h2>
+	
+	<br>
+	
+	<div class="row" style="padding: 0px 15px 15px 15px">
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-users fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">26</div>
+                                    <div>New Users!</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-green">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-tasks fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">12</div>
+                                    <div>New Tasks!</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-yellow">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-shopping-cart fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">124</div>
+                                    <div>New Orders!</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-red">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-support fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">13</div>
+                                    <div>Support Tickets!</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+			
+			<div class="row-fluid sortable panel panel-default" style="margin:10px">		
+				<!-- <div class="box span12">
+					<div class="box-header" data-original-title> -->
+						<div class="panel-heading">
+							<h2><i class="halflings-icon white user"></i><span class="break"></span>Members</h2>
+						</div>
+						
+						<div style="padding:15px">
+							<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#addUserModal">Add User  <i class="fa fa-user-plus"></i></button>
+							
+						</div>
+						
+						<div id="addUserModal" class="modal fade" role="dialog">
+						  <div class="modal-dialog">
+						
+						    <!-- Modal content-->
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <button type="button" class="close" data-dismiss="modal">&times;</button>
+						         <h4 class="modal-title">Add User</h4>
+						      </div>
+						      <div class="modal-body">	      	
+						      	
+						      			<form:form class="form-horizontal col-md-12 center-block" method="post" modelAttribute="addUser" action="admin/addUser">
+				       	     	 
+						       	     	 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+						       	     	 
+                  						 <br>
+                  						 <br>
+                  						 
+						       	     	 <div class="form-group">
+										      <form:input path="username" type='text' name='username' class="form-control input-lg" placeholder="username" id="username"/>
+										      <form:errors path="username" cssStyle="color: #ff0000;"/>				      
+										  </div>
+										  
+										   <div class="form-group">
+										      <form:input path="password" type='password' name='password' class="form-control input-lg" placeholder="password" id="password"/>
+										      <form:errors path="password" cssStyle="color: #ff0000;"/>				      
+										  </div>
+							
+										  <div class="form-group">
+										      <form:input path="email" type='text' name='email' class="form-control input-lg" placeholder="email" id="email"/>
+										      <form:errors path="email" cssStyle="color: #ff0000;"/>				      
+										  </div>
+										  
+										  <input type="hidden" name="enabled" path="enabled" value="true"/>							 
+						              
+									 </form:form>
+								
+						      </div>
+						      <div class="modal-footer">
+						        <button type="button" class="btn btn-default pull-left">Add User</button>
+						        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						      </div>
+						    </div>
+						    </div>
+						    </div>
+    
 						<div class="box-icon">
 							<a href="#" class="btn-setting"><i class="halflings-icon white wrench"></i></a>
 							<a href="#" class="btn-minimize"><i class="halflings-icon white chevron-up"></i></a>
 							<a href="#" class="btn-close"><i class="halflings-icon white remove"></i></a>
 						</div>
-					</div>
-					<div class="box-content">
+					
+					
+					<div class="box-content" style="padding:0px 15px 15px 15px">
 						<table class="table table-striped table-bordered bootstrap-datatable datatable">
 						  <thead>
 							  <tr>
@@ -317,11 +517,11 @@
 								<td class="center">
 								
 									<a href="${pageContext.request.contextPath}/admin/delete-user/${member.username}" >
-										<span style="color:red" class="glyphicon glyphicon-trash" />
+										<span style="color:red" class="glyphicon glyphicon-trash"></span>
 									</a>
 									
 									<a href="${pageContext.request.contextPath}/admin" >
-										<span style="color:blue" class="glyphicon glyphicon-edit" />
+										<span style="color:blue" class="glyphicon glyphicon-edit"></span>
 									</a>
 									
 									
@@ -331,37 +531,113 @@
 						  </tbody>
 					  </table>            
 					</div>
-				</div><!--/span-->
+			</div>
 			
-			</div><!--/row-->
+			<div class="row-fluid sortable panel panel-default" style="margin:10px">		
+				<!-- <div class="box span12">
+					<div class="box-header" data-original-title> -->
+						<div class="panel-heading">
+							<h2><i class="halflings-icon white user"></i><span class="break"></span>Products</h2>
+						</div>
+						
+						<div style="padding:15px">
+							<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#addProductModal">Add Product  <i class="fa fa-plus"></i></button>
+						</div>
+						
+						<div id="addProductModal" class="modal fade" role="dialog">
+						  <div class="modal-dialog">
+						
+						    <!-- Modal content-->
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <button type="button" class="close" data-dismiss="modal">&times;</button>
+						         <h4 class="modal-title">Add Product</h4>
+						      </div>
+						      <div class="modal-body">			 
+			 					<p>some text..</p>
+						      </div>
+						      <div class="modal-footer">
+						        <button type="button" class="btn btn-default pull-left">Add Product</button>
+						        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						      </div>
+						    </div>
+						    </div>
+						    </div>
+    
+						<div class="box-icon">
+							<a href="#" class="btn-setting"><i class="halflings-icon white wrench"></i></a>
+							<a href="#" class="btn-minimize"><i class="halflings-icon white chevron-up"></i></a>
+							<a href="#" class="btn-close"><i class="halflings-icon white remove"></i></a>
+						</div>
+					
+					
+					<div class="box-content" style="padding:0px 15px 15px 15px">
+						<table class="table table-striped table-bordered bootstrap-datatable datatable">
+						  <thead>
+							  <tr>
+								  <th>Product</th>
+								  <th>Price</th>
+								  <th>Size</th>
+								  <th>Inventory</th>
+								  <th>Colors</th>
+								  <th>Actions</th>
+							  </tr>
+						  </thead>   
+						  <tbody>
+						  <c:forEach var="product" items="${products}">
+							<tr>
+								<td class="center">
+									<div class="media">
+									  <div class="media-left">
+									    <a href="#">
+									      <img class="media-object" src="/resources/images/crutch_black_back.jpg">
+									    </a>
+									  </div>
+									  <div class="media-body">
+									    <h4 class="media-heading">Media heading</h4>
+									    ...
+									  </div>
+									</div>
+								</td>
+								<td class="center">${product.price}</td>
+								<td class="center">
+									<c:forEach var="det" items="${product.productDetail}">
+										<c:if test="${det.color }">
+										<div style="padding: 5px">${det.size}</div>
+										</c:if>
+									</c:forEach>
+								</td>
+								<td class="center">
+									<table>
 	
+									</table>
+								</td>
+								<td class="center">
+									<span class="label label-success">Active</span>
+								</td>
+								<td class="center">
+								
+									<a href="${pageContext.request.contextPath}/admin/delete-user/${member.username}" >
+										<span style="color:red" class="glyphicon glyphicon-trash"></span>
+									</a>
+									
+									<a href="${pageContext.request.contextPath}/admin" >
+										<span style="color:blue" class="glyphicon glyphicon-edit"></span>
+									</a>
+									
+									
+								</td>
+							</tr>
+							</c:forEach>
+						  </tbody>
+					  </table>            
+					</div>
+			</div>
+			
+			</div>
+			</div>
 	
-	
-	
-	<!--  
-	 <div id="table-container">
-	 <table cellpadding="0" cellspacing="0" border="1" class="display" id="userinfo">
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>First Name</th>
-                <th>Middle Initial</th>
-                <th>Last Name</th>
-                <th>Phone Number</th>
-                <th>Email</th>
-            </tr>
-        </thead>
-        <tbody>
-   
-        </tbody>     
-   			<button id="btnDeleteRow">Delete selected company</button>      
-        </table>
-         </div>
-		-->
-
-         
-         
-
+		
 </body>
  <!-- script references -->
     <div class="footer">

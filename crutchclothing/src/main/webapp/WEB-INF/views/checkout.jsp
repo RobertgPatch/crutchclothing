@@ -494,7 +494,6 @@
       	       if(payFields.style.display == 'none') {
       	    	   var select = document.getElementById('paymentCardIds');
       	    	   if(select.value) {
-      	          	 alert("select ok");
       	          	 document.getElementById("paymentError").innerHTML = "";
    				   	 $("#collapseFive").collapse('hide');
    				     $("#collapseSix").collapse('show');

@@ -54,6 +54,7 @@
 		<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 
 		<!----webfonts---->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,300' rel='stylesheet' type='text/css'>
 		<!----//webfonts---->
 
@@ -108,7 +109,6 @@
 							        </div>						          
 						        </li>
 						        <li><a href="about.html">About</a></li>
-						        <li><a href="blog.html">Blog</a></li>
 						        <li><a href="contact.html">Contact</a></li>
 						      </ul>							      					    					      
 						    </div><!-- /.navbar-collapse -->
@@ -132,15 +132,14 @@
 				</div>
 			</div>
         </div>
-        
-        
-         <div class="container">
-       	   <div class="main">
-       	   	 <div class="row">
-	       	   	<div class="col-md-12 text-center">
-			 		<h2>Login</h2>
-			 	</div>	
-		 	</div>
+        <br>
+	<div class="container">
+	<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2>Login</h2>
+		
+	</div>
+       	   <div class="panel-body">
 		 	
 		 	<c:if test="${not empty error}">
 				<div class="col-sm-10 error">${error}</div>
@@ -172,31 +171,9 @@
 				  </div>
 				  
 			 </form>
-			 <!--  
-			 <form name='loginForm'
-			action="<c:url value='/j_spring_security_check' />" method='POST'>
 
-			<table>
-				<tr>
-					<td>User:</td>
-					<td><input type='text' name='username'></td>
-				</tr>
-				<tr>
-					<td>Password:</td>
-					<td><input type='password' name='password' /></td>
-				</tr>
-				<tr>
-					<td colspan='2'><input name="submit" type="submit"
-						value="submit" /></td>
-				</tr>
-			</table>
-
-			<input type="hidden" name="${_csrf.parameterName}"
-				value="${_csrf.token}" />
-
-		</form>
--->
            </div>
+       </div>
        </div>
        
 <div class="footer">

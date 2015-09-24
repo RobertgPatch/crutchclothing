@@ -9,6 +9,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -36,13 +38,13 @@ public class Order implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private final static double TAX_RATE = 8.25;
+	private final static double TAX_RATE = 8.25000;
 	private Integer id;
 	private Integer orderNumber;
 	private DateTime orderDate;
 	private double salesTax;
 	private double orderTotal;
-	private String orderStatus;
+	private OrderStatus orderStatus;
 	private User user;
 	private Set<OrderLine> orderLines = new HashSet<OrderLine>();
 	private Shipment shipment;
@@ -116,13 +118,13 @@ public class Order implements Serializable{
 		this.orderTotal = orderTotal;
 	}
 	
-	
+	@Enumerated(EnumType.STRING)
 	@Column(name = "order_status", nullable = true)
-	public String getOrderStatus() {
+	public OrderStatus getOrderStatus() {
 		return this.orderStatus;
 	}
 	
-	public void setOrderStatus(String orderStatus) {
+	public void setOrderStatus(OrderStatus orderStatus) {
 		this.orderStatus = orderStatus;
 	}
 	
@@ -179,8 +181,9 @@ public class Order implements Serializable{
 		this.cardSaved = cardSaved;
 	}
 	
+	//@OneToOne(mappedBy="order")
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "shipment_id")
 	public Shipment getShipment() {
 		return this.shipment;
 	}
@@ -240,4 +243,19 @@ public class Order implements Serializable{
 		
 	}
 	*/
+	public enum OrderStatus {
+		INCOMPLETE("Incomplete"), COMPLETE("Complete"), SHIPPED("shippied"), 
+			REFUNDED("Refunded"), PARTIALLY_REFUNDED("Partially Refunded"), 
+			CANCELLED("Canelled");
+		
+		private String status;
+		private OrderStatus(String status) {
+			this.status = status;
+		}
+		public String getStatus() {
+			return this.status;
+		}
+		
+	}
 }
+

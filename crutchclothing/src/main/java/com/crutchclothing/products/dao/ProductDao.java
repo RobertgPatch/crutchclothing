@@ -17,9 +17,9 @@ public interface ProductDao {
 	
 	void updateProduct(Product product, ProductDetail details);
 	
-	void updateProductInventory(Product product, Inventory inventory);
+	//void updateProductInventory(Product product, Inventory inventory);
 	
-	ProductDetail findProductDetail(Product product, String size, String color);
+	ProductDetail findProductDetail(Product product, String size);
 	
 	Product findProduct(Integer id);
 	

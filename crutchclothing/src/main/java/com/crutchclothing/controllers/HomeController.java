@@ -3,6 +3,7 @@ package com.crutchclothing.controllers;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.crutchclothing.cart.model.Cart;
+import com.crutchclothing.products.service.ProductService;
 import com.crutchclothing.users.model.User;
 import com.crutchclothing.users.service.UserService;
 import com.crutchclothing.util.CrutchUtils;
@@ -37,6 +39,7 @@ import com.crutchclothing.util.CrutchUtils;
 public class HomeController {
 
 	private UserService userService;
+	private ProductService productService;
 	private User user;
 	private Cart cart;
 	private List<User> userList;
@@ -57,12 +60,10 @@ public class HomeController {
 	    //System.out.println(name);
 	    
 	   if(!name.equalsIgnoreCase("anonymoususer")) {
-		    if(this.user == null) {
-				this.user = userService.findUser(name);
-		    }
-		    if(this.cart == null) {
-				this.cart = user.getUserCart();
-		    }
+
+			this.user = userService.findUser(name);
+			this.cart = user.getUserCart();
+
 			model.addAttribute("user", this.user);
 			model.addAttribute("cartQuan", cart.getTotalQuantity());
 	   }
@@ -93,11 +94,16 @@ public class HomeController {
 		   if(this.userList == null) {
 			   userList = userService.findAllUsers();
 		   }
+
+		   
 		   model.addAttribute("title", "Spring Security Custom Login Form");
 		   model.addAttribute("message", "This is protected page!");
 		   model.addAttribute("cartQuan", this.cart.getTotalQuantity());
 		   model.addAttribute("shortRole", this.user.getTopRole());
+		   model.addAttribute("products", productService.findAllProducts());
+		   model.addAttribute("addUser", new User());
 		   model.addAttribute("users", userList);
+
 	   }
 		return "admin";
 
@@ -194,6 +200,14 @@ public class HomeController {
 		
 		public void setUserService(UserService userService) {
 			this.userService = userService;
+		}
+		
+		public ProductService getProductService() {
+			return this.productService;
+		}
+		
+		public void setProductService(ProductService productService) {
+			this.productService = productService;
 		}
 
 }

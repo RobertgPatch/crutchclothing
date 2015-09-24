@@ -33,7 +33,9 @@ import com.crutchclothing.cart.model.CartProductRef;
 import com.crutchclothing.cart.service.CartService;
 import com.crutchclothing.inventory.Inventory;
 import com.crutchclothing.orders.model.Order;
+import com.crutchclothing.orders.model.Order.OrderStatus;
 import com.crutchclothing.orders.model.OrderLine;
+import com.crutchclothing.orders.model.Shipment;
 import com.crutchclothing.orders.service.OrderService;
 import com.crutchclothing.products.model.Product;
 import com.crutchclothing.users.model.Address;
@@ -177,8 +179,18 @@ public class OrderController {
 			Cart cart = user.getUserCart();
 			
 			order.setOrderDate(new DateTime());
-			order.getShipment().setShipDate(new LocalDate());
-			orderService.saveOrder(order);
+			
+			Shipment shipment = order.getShipment();
+			//shipment.setShipDate(new LocalDate());
+			Integer addressId = order.getShipment()
+					.getShippingAddress().getId();
+			
+			//shipment.orderService.saveAddressToShipment());
+			order.setOrderStatus(OrderStatus.INCOMPLETE);
+			order.setOrderNumber(99);
+			
+			orderService.saveAddressToShipment(shipment, addressId);
+			
 			
 			for(CartProduct cartProd : cart.getCartProducts()) {
 				for(CartProductRef cpr : cartProd.getCartProductRefs()) {
@@ -186,12 +198,13 @@ public class OrderController {
 				}
 			}
 			order.setOrderTotal(orderTotal);
-			
+			orderService.saveOrder(order, shipment.getId(), order.getBillingAddress().getId());
 			for(CartProduct cartProd : cart.getCartProducts()) {
 				for(CartProductRef cpr : cartProd.getCartProductRefs()) {
 					Product prod = cartProd.getProduct();					
 					OrderLine orderLine = new OrderLine(prod, order);
 					orderLine.setProductQuantity(cpr.getProductQuantity());
+					//Order updatedOrder = orderService.findOrderById(orderId)
 					orderService.saveOrderLine(orderLine);
 					orderLines.add(orderLine);
 				}
@@ -459,6 +472,14 @@ public class OrderController {
 	
 	public void setUserService(UserService userService) {
 		this.userService = userService;
+	}
+	
+	public void setCartService(CartService cartService) {
+		this.cartService = cartService;
+	}
+	
+	public void setOrderService(OrderService orderService) {
+		this.orderService = orderService;
 	}
 
 

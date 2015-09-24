@@ -2,26 +2,14 @@ package com.crutchclothing.orders.model;
 
 import java.io.Serializable;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import org.hibernate.annotations.ForeignKey;
-
 import com.crutchclothing.products.model.Product;
-import com.crutchclothing.products.model.Size;
 
 
 @Entity

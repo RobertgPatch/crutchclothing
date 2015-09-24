@@ -78,9 +78,10 @@ public class ProductDaoImpl implements ProductDao {
 		sessionFactory.getCurrentSession().merge(productFound);
 	}
 	
+	/*
 	@Override
 	@Transactional
-	public void updateProductInventory(Product product, Inventory inventory) {
+	public void updateProductInventory(ProductDetail product, Inventory inventory) {
 		Product productFound =
 				(Product)sessionFactory.getCurrentSession().get(Product.class, product.getId());
 		productFound.getDailyInventory().add(inventory);
@@ -88,19 +89,19 @@ public class ProductDaoImpl implements ProductDao {
 		sessionFactory.getCurrentSession().persist(inventory);
 		sessionFactory.getCurrentSession().merge(productFound);
 	}
+	*/
 	@Transactional
-	public ProductDetail findProductDetail(Product product, String size, String color) {
+	public ProductDetail findProductDetail(Product product, String size) {
 		String sql = "select * from products_details where product_id = " 
 				+ product.getId() + " and product_size = '" + size 
-				+ "' and product_color = '" + color + "'";
+				+ "'";
 		
-		String hql = "from ProductDetail where product_id = ? and product_size = ? and product_color = ?";
+		String hql = "from ProductDetail where product_id = ? and product_size = ?";
 		
 		//List<CartProduct> cartProducts = sessionFactory.getCurrentSession().createSQLQuery(query).list();
 		List<ProductDetail> productDetails = sessionFactory.getCurrentSession().createQuery(hql)
 				.setParameter(0, product.getId())
 				.setParameter(1, size)
-				.setParameter(2, color)
 				.list();
 		
 		

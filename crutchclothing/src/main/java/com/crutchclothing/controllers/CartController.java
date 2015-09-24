@@ -71,7 +71,7 @@ public class CartController {
 	    }
 	
 	@RequestMapping(value="/cart")
-	public String showCart(ModelMap model, Principal auth) {
+	public String showCart(Model model, Principal auth) {
 		
 		String name = "anonymoususer";
 		
@@ -85,7 +85,7 @@ public class CartController {
 	   if(!name.equalsIgnoreCase("anonymoususer")) {
 		    
 			User user = userService.findUser(name);
-			Cart cart = user.getUserCart();
+			Cart cart = cartService.findCart(user.getUserCart().getCartId());
 			model.addAttribute("user", user);
 			model.addAttribute("cartProducts", new ArrayList<CartProduct>(cart.getCartProducts()));
 			model.addAttribute("cartQuan", cart.getTotalQuantity());
@@ -154,8 +154,8 @@ public class CartController {
 	}
 	
 	@RequestMapping(value="/add-to-cart", method = RequestMethod.POST)  
-    public String submitForm(/*@RequestParam("size") String size, */@RequestParam("id") Integer productId,
-    		@ModelAttribute("productDetail") @Validated ProductDetail productDetail, BindingResult result, 
+    public String submitForm(@RequestParam("id") Integer productId, @ModelAttribute("productDetail")
+    		@Validated ProductDetail productDetail, BindingResult result, 
     		RedirectAttributes redir, Principal auth, Model model) {  
 		
 		String name = "anonymoususer";
@@ -211,7 +211,7 @@ public class CartController {
 				user = userService.findUser(name);
 				
 				ProductDetail foundProductDetail = productService.findProductDetail(product, 
-							productDetail.getSize(), productDetail.getColor()); 
+							productDetail.getSize()); 
 				
 				int quant = productDetail.getQuantity();
 				
@@ -227,7 +227,6 @@ public class CartController {
 				if(cartPid >= 0){
 						if(productInstanceExistsInCart(cartPid, foundProductDetail.getId())) {
 							String cartSize = productDetail.getSize();
-							String cartColor = productDetail.getColor();
 							int newQty = productDetail.getQuantity();
 							
 							Integer pDetailId = foundProductDetail.getId();
@@ -241,6 +240,8 @@ public class CartController {
 					cartService.saveCartProduct(cartProduct);
 					cartService.saveDetailToCartProduct(cartProduct.getCartProductId(),
 							foundProductDetail);
+					
+					return showCart(model, auth);
 				}
 				view = "cart";
 			}
@@ -254,7 +255,7 @@ public class CartController {
 	@RequestMapping(value="/updatecart", method = RequestMethod.POST)  
     public String checkQuantity(@RequestParam("cartProductId") Integer cartProductId, 
     		@RequestParam("prodDetailId") Integer productDetailId, 
-    		@RequestParam("newQuantity") int newQuantity, ModelMap 
+    		@RequestParam("newQuantity") int newQuantity, Model 
     		model, Principal auth) {  
         
 		cartService.changeCartProductQuantity(cartProductId, productDetailId, newQuantity);
@@ -313,8 +314,9 @@ public class CartController {
 	public String inventory() {
 		
 		Product p = productService.findProduct(1);
-		Inventory in = new Inventory(p, 10);
-		productService.updateProductInventory(p, in);
+		ProductDetail det = p.getProductDetail().iterator().next();
+		Inventory in = new Inventory(det, 10);
+		//productService.updateProductInventory(p, in);
 		
 		return null;
 	}

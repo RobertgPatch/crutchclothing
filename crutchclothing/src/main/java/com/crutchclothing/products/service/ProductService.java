@@ -32,12 +32,14 @@ public class ProductService {
 		productDao.updateProduct(product, details);
 	}
 	
+	/*
 	public void updateProductInventory(Product product, Inventory inventory) {
 		productDao.updateProductInventory(product, inventory);
 	}
+	*/
 	
-	public ProductDetail findProductDetail(Product product, String size, String color) {
-		return productDao.findProductDetail(product, size, color);
+	public ProductDetail findProductDetail(Product product, String size) {
+		return productDao.findProductDetail(product, size);
 	}
 	
 	public Product findProduct(Integer id) {

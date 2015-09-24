@@ -11,8 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.crutchclothing.orders.model.Order;
 import com.crutchclothing.orders.model.OrderLine;
+import com.crutchclothing.orders.model.Shipment;
 import com.crutchclothing.products.model.Category;
 import com.crutchclothing.products.model.Product;
+import com.crutchclothing.users.model.Address;
 import com.crutchclothing.users.model.User;
 
 @Repository
@@ -23,7 +25,7 @@ public class OrderDaoImpl implements OrderDao {
 	
 	@Override
 	@Transactional
-	public void saveOrder(Order order) {
+	public void saveOrder(Order order, Integer shipmentId, Integer billingId) {
 		
 		/*
 		Set<Product> products = order.getProducts();
@@ -33,7 +35,17 @@ public class OrderDaoImpl implements OrderDao {
 			}
 		}
 		*/
+		Shipment shipment = (Shipment) this.sessionFactory.getCurrentSession()
+				.load(Shipment.class, shipmentId);
+		Address address = (Address) this.sessionFactory.getCurrentSession()
+				.load(Address.class, billingId);
+		
+		order.setBillingAddress(address);
+		order.setShipment(shipment);
 		sessionFactory.getCurrentSession().save(order);
+		
+		shipment.setOrder(order);
+		sessionFactory.getCurrentSession().saveOrUpdate(shipment);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -115,12 +127,38 @@ public class OrderDaoImpl implements OrderDao {
 	
 	@Override
 	@Transactional
+	public void saveShipment(Shipment shipment) {
+		this.sessionFactory.getCurrentSession().persist(shipment);
+	}
+	
+	@Override
+	@Transactional
+	public void saveAddressToShipment(Shipment shipment, Integer addressId) {
+		
+		Address address = (Address) this.sessionFactory.getCurrentSession()
+				.load(Address.class, addressId);
+		
+		
+		shipment.setShippingAddress(address);
+		this.sessionFactory.getCurrentSession().saveOrUpdate(shipment);
+		//this.sessionFactory.getCurrentSession().flush();
+
+	}
+	
+	@Override
+	@Transactional
 	public void updateUserWithOrder(Order order, User user) {
 		user.getOrders().add(order);
 		order.setUser(user);
 		sessionFactory.getCurrentSession().saveOrUpdate(order);
 		sessionFactory.getCurrentSession().saveOrUpdate(user);
 	}
+	
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
+	
 
 	
 }
