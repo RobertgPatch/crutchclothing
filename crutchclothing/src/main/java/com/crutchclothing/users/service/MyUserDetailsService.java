@@ -31,8 +31,14 @@ public class MyUserDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
 		
-		com.crutchclothing.users.model.User user = userDao.findByUserName(username);
+		com.crutchclothing.users.model.User user = userDao.findByUserNameWithRoles(username);
+		
+		//System.out.println("user = " + user.getUsername());
 		List<GrantedAuthority> authorities = buildUserAuthority(user.getUserRole());
+		//System.out.println("Granted authorities size = " + authorities.size());
+		for (GrantedAuthority grantedAuthority : authorities) {
+			//System.out.println("granted authority = " + grantedAuthority.getAuthority());
+		}
 
 		return buildUserForAuthentication(user, authorities);
 		
@@ -47,13 +53,20 @@ public class MyUserDetailsService implements UserDetailsService {
 	private List<GrantedAuthority> buildUserAuthority(Set<UserRole> userRoles) {
 
 		Set<GrantedAuthority> setAuths = new HashSet<GrantedAuthority>();
-
+		
+		//System.out.println("userRoles size = " + userRoles.size());
 		// Build user's authorities
 		for (UserRole userRole : userRoles) {
+			//System.out.println("user role = " + userRole.getRole());
 			setAuths.add(new SimpleGrantedAuthority(userRole.getRole()));
 		}
 
 		List<GrantedAuthority> Result = new ArrayList<GrantedAuthority>(setAuths);
+		
+		//System.out.println("result size = " + Result.size());
+		for (GrantedAuthority grantAuth : Result) {
+			//System.out.println("granted authority = " + grantAuth.getAuthority());
+		}
 
 		return Result;
 	}

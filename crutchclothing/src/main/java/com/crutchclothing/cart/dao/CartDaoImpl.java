@@ -2,7 +2,9 @@ package com.crutchclothing.cart.dao;
 
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +16,7 @@ import com.crutchclothing.cart.model.CartProductRef;
 import com.crutchclothing.cart.model.CartProductRef.Id;
 import com.crutchclothing.products.model.Product;
 import com.crutchclothing.products.model.ProductDetail;
+import com.crutchclothing.users.model.User;
 
 @Repository
 public class CartDaoImpl implements CartDao {
@@ -36,6 +39,14 @@ public class CartDaoImpl implements CartDao {
 	public Cart findCart(Integer cart_id) {  
 		    return (Cart) sessionFactory.getCurrentSession().get(Cart.class, cart_id);  
 	}  
+	
+	@Override
+	@Transactional
+	public Cart findCartWithCartProducts(Integer cartId) {
+		Cart cart = (Cart) sessionFactory.getCurrentSession().createCriteria(User.class).add(Restrictions.idEq(cartId)).uniqueResult();
+		Hibernate.initialize(cart.getCartProducts());
+		return cart;
+	}
 	
 	@Override
 	@Transactional

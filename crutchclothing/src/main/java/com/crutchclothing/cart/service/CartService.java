@@ -35,6 +35,10 @@ public class CartService {
 		return cartDao.findCart(cart_id);
 	}
 	
+	public Cart findCartWithCartProducts(Integer cartId) {
+		return cartDao.findCartWithCartProducts(cartId);
+	}
+	
 	public void addToCart(Integer cartId, Product product) {
 		//System.out.println("productid = " + product.getId());
 		cartDao.addProductToCart(cartId, product);

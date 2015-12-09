@@ -14,6 +14,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
@@ -40,8 +41,10 @@ public class User implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private int id;
 	private String username;
 	private String stripeId;
+	private String sessionId;
 	private String firstName;
 	//private String middleInit;
 	//private String lastName;
@@ -50,6 +53,7 @@ public class User implements Serializable {
 	private String passwordConf;
 	private String email;
 	private LocalDate memberSince;
+	private LocalDate firstPageVisit;
 	private boolean enabled;
 	private Set<UserRole> userRole = new HashSet<UserRole>(0);
 	private Set<Order> orders = new HashSet<Order>(0);
@@ -60,7 +64,8 @@ public class User implements Serializable {
 
 	public User() {
 	}
-
+	
+	
 	public User(String username, String password, String email, boolean enabled) {
 		
 		this.username = username;
@@ -78,9 +83,19 @@ public class User implements Serializable {
 		this.enabled = enabled;
 		this.userRole = userRole;
 	}
-
+	
 	@Id
-	@Column(name = "username", unique = true, nullable = false, length = 45)
+	@Column(name = "user_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	public int getId() {
+		return this.id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	@Column(name = "username", unique = false, nullable = true, length = 45)
 	public String getUsername() {
 		return this.username;
 	}
@@ -98,7 +113,7 @@ public class User implements Serializable {
 		this.stripeId = stripeId;
 	}
 	
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(cascade = CascadeType.ALL/*, fetch = FetchType.EAGER*/)
     @JoinColumn(name = "cart_id")
 	@JsonIgnore
 	public Cart getUserCart() {
@@ -149,7 +164,7 @@ public class User implements Serializable {
 	
 	*/
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "users")
+	@ManyToMany(cascade = CascadeType.ALL, /*fetch = FetchType.EAGER,*/ mappedBy = "users")
 	public Set<Address> getAddresses() {
 		return this.addresses;
 	}
@@ -207,13 +222,22 @@ public class User implements Serializable {
 	}
 	*/
 	
-	@Column(name = "password", nullable = false, length = 255)
+	@Column(name = "password", nullable = true, length = 255)
 	public String getPassword() {
 		return this.password;
 	}
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	@Column(name="session_id", nullable = true)
+	public String getSessionId() {
+		return sessionId;
+	}
+
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
 	}
 	
 	@Transient
@@ -225,7 +249,7 @@ public class User implements Serializable {
 		this.passwordConf = passwordConf;
 	}
 	
-	@Column(name = "email", nullable = false, length = 100)
+	@Column(name = "email", nullable = true, length = 100)
 	public String getEmail() {
 		return this.email;
 	}
@@ -234,7 +258,7 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
-	@Column(name = "enabled", nullable = false)
+	@Column(name = "enabled", nullable = true)
 	public boolean isEnabled() {
 		return this.enabled;
 	}
@@ -243,7 +267,7 @@ public class User implements Serializable {
 		this.enabled = enabled;
 	}
 	
-	@Columns(columns = { @Column(name = "member_since", nullable = false) })
+	@Columns(columns = { @Column(name = "member_since", nullable = true) })
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     public LocalDate getMemberSince() {
 		return this.memberSince;
@@ -252,8 +276,20 @@ public class User implements Serializable {
 	public void setMemberSince(LocalDate memberSince) {
 		this.memberSince = memberSince;
 	}
+	
+	@Columns(columns = { @Column(name = "first_page_visit", nullable = true) })
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+	public LocalDate getFirstPageVisit() {
+		return firstPageVisit;
+	}
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+
+	public void setFirstPageVisit(LocalDate firstPageVisit) {
+		this.firstPageVisit = firstPageVisit;
+	}
+
+
+	@OneToMany(/*fetch = FetchType.EAGER,*/ mappedBy = "user")
 	@JsonIgnore
 	public Set<UserRole> getUserRole() {
 		return this.userRole;
@@ -264,7 +300,7 @@ public class User implements Serializable {
 	}
 	
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+	@OneToMany(/*fetch = FetchType.LAZY,*/ mappedBy = "user")
 	public Set<Order> getOrders() {
 		return this.orders;
 	}

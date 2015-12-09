@@ -1,4 +1,4 @@
-package com.crutchclothing.users.dao;
+package com.crutchclothing.users.dao.impl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -9,7 +9,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 
+import org.hibernate.Hibernate;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,7 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import com.crutchclothing.cart.model.CartProduct;
+import com.crutchclothing.cart.model.CartProductRef;
 import com.crutchclothing.config.EMF;
+import com.crutchclothing.users.dao.UserDao;
 import com.crutchclothing.users.model.Address;
 import com.crutchclothing.users.model.User;
 import com.crutchclothing.users.model.UserRole;
@@ -46,20 +51,138 @@ public class UserDaoImpl implements UserDao {
 		} else {
 			return null;
 		}
+		
 
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public User findByUserNameWithRoles(final String username) {
+
+		List<User> users = new ArrayList<User>();
+		
+		users = sessionFactory.getCurrentSession().createCriteria(User.class).add(Restrictions.eq("username", username)).list();
+				
+//		users = sessionFactory.getCurrentSession().createQuery("from User where username=?").setParameter(0, username)
+//				.list();
+		//users = entityManager.createQuery("from User where username=?").setParameter(0, username).getResultList();
+
+		if (users.size() > 0) {
+			User user = users.get(0);
+			Hibernate.initialize(user.getUserRole());
+			return user;
+			//return users.get(0);
+		} else {
+			return null;
+		}
+		
+
+	}
+	@Transactional
+	public User findUserByNameWithProfile(final String username) {
+		
+		try {
+			User user = (User) sessionFactory.getCurrentSession().createCriteria(User.class)
+					.add(Restrictions.eq("username", username)).uniqueResult();
+			
+			Hibernate.initialize(user.getUserCart());
+			Hibernate.initialize(user.getUserRole());
+			Hibernate.initialize(user.getAddresses());
+			Hibernate.initialize(user.getOrders());
+			
+			return user;
+		}	
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+	@Transactional
+	public User findUserByNameWithCart(final String username) {
+		
+		try {
+			User user = (User) sessionFactory.getCurrentSession().createCriteria(User.class)
+					.add(Restrictions.eq("username", username)).uniqueResult();
+			
+			System.out.println("Before init user cart and quantity = " + user.getUserCart().getTotalQuantity());
+			Hibernate.initialize(user.getUserCart());
+			System.out.println("Before init user cart products quantity = " + user.getUserCart().getCartProducts().size());
+			
+			for(CartProduct cp : user.getUserCart().getCartProducts()) {
+				Hibernate.initialize(cp);
+				for(CartProductRef cpr : cp.getCartProductRefs()) {
+					Hibernate.initialize(cpr);
+				}
+			}
+			
+			return user;
+		}	
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public User getBySessionIdWithCartInfo(String sessionId) {
+		List<User> users = new ArrayList<User>();
+
+		users = sessionFactory.getCurrentSession().createCriteria(User.class).add(Restrictions.eq("sessionId", sessionId)).list();
+//		users = sessionFactory.getCurrentSession().createQuery("from User where session_id=?").setParameter(0, sessionId)
+//				.list();
+		//users = entityManager.createQuery("from User where username=?").setParameter(0, username).getResultList();
+		
+		User user = null;
+		if (users.size() > 0) {
+			user = users.get(0);
+		} else {
+			return null;
+		}
+		
+		Hibernate.initialize(user.getUserCart());
+		
+		for(CartProduct cp : user.getUserCart().getCartProducts()) {
+			Hibernate.initialize(cp);
+			for(CartProductRef cpr : cp.getCartProductRefs()) {
+				Hibernate.initialize(cpr);
+			}
+		}
+		
+		return user;
+		
 	}
 	@Override
 	@Transactional
 	public void addUser(User user) {
-		UserRole userRole = new UserRole(user, "ROLE_USER");
-		//user.getUserRole().add(userRole);
-		//user.getUserRole().add(e)
-		user.setMemberSince(new LocalDate());
+		
+		//Cookie cookie
+		UserRole userRole = null;
+		LocalDate memberSince = null;
+		LocalDate firstPageVisit = null;
+		if(user.getUsername() == null) {
+			userRole = new UserRole(user, "ROLE_ANONYMOUS");
+			firstPageVisit = new LocalDate();
+		}
+		else {
+			userRole = new UserRole(user, "ROLE_USER");
+			removeAnonymousRole(user.getUserRole());
+			memberSince =  new LocalDate();
+		}
+	
+		user.setMemberSince(memberSince);
+		user.setFirstPageVisit(firstPageVisit);
 		//entityManager.persist(user);
 		//entityManager.persist(userRole);
-		sessionFactory.getCurrentSession().persist(user);
+		sessionFactory.getCurrentSession().saveOrUpdate(user);
 		sessionFactory.getCurrentSession().persist(userRole);
 		
+	}
+	
+	@Override
+	@Transactional
+	public void deleteUserRole(UserRole userRole) {
+		sessionFactory.getCurrentSession().delete(userRole);
 	}
 	/*
 	@Override
@@ -107,6 +230,8 @@ public class UserDaoImpl implements UserDao {
 		User currUser = findByUserName(name);
 		
 		currUser.setEmail(user.getEmail());
+		
+		//user.get
 		//currUser.setFirstName(user.getFirstName());
 		//currUser.setLastName(user.getLastName());
 		//currUser.setMiddleInit(user.getMiddleInit());
@@ -191,6 +316,15 @@ public class UserDaoImpl implements UserDao {
 		}
 		
 		return id;
+	}
+	
+	private void removeAnonymousRole(Set<UserRole> userRoles) {
+		for(UserRole role : userRoles) {
+			if(role.getRole().equals("ROLE_ANONYMOUS")) {
+				deleteUserRole(role);
+				break;
+			}
+		}
 	}
 	
 	public SessionFactory getSessionFactory() {

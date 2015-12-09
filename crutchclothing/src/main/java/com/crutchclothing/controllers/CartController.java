@@ -210,8 +210,8 @@ public class CartController {
 				product = productService.findProduct(productId);
 				user = userService.findUser(name);
 				
-				ProductDetail foundProductDetail = productService.findProductDetail(product, 
-							productDetail.getSize()); 
+				ProductDetail foundProductDetail = productService.findProductDetail(product, ""/* 
+							productDetail.getSize()*/); 
 				
 				int quant = productDetail.getQuantity();
 				
@@ -226,7 +226,7 @@ public class CartController {
 				Integer cartPid = cartProductExists(cartProduct);
 				if(cartPid >= 0){
 						if(productInstanceExistsInCart(cartPid, foundProductDetail.getId())) {
-							String cartSize = productDetail.getSize();
+							//String cartSize = productDetail.getSize();
 							int newQty = productDetail.getQuantity();
 							
 							Integer pDetailId = foundProductDetail.getId();
@@ -315,7 +315,7 @@ public class CartController {
 		
 		Product p = productService.findProduct(1);
 		ProductDetail det = p.getProductDetail().iterator().next();
-		Inventory in = new Inventory(det, 10);
+		//Inventory in = new Inventory(det, 10);
 		//productService.updateProductInventory(p, in);
 		
 		return null;

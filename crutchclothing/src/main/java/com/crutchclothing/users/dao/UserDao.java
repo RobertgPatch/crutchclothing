@@ -5,11 +5,18 @@ import java.util.Set;
 
 import com.crutchclothing.users.model.Address;
 import com.crutchclothing.users.model.User;
+import com.crutchclothing.users.model.UserRole;
 import com.crutchclothing.util.AddressType;
 
 public interface UserDao {
 
 	User findByUserName(String username);
+	
+	User findByUserNameWithRoles(String username);
+	
+	User findUserByNameWithCart(final String username);
+	
+	User getBySessionIdWithCartInfo(String sessionId);
 
 	void addUser(User user);
 	
@@ -32,5 +39,8 @@ public interface UserDao {
 	void updateUserAddressType(Integer addressId, AddressType addressType);
 	
 	void deleteUser(String username);
+
+	void deleteUserRole(UserRole userRole);
+	
 	
 }

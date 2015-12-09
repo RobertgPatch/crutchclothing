@@ -13,14 +13,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-
-
-import javax.persistence.Transient;
 
 import com.crutchclothing.cart.model.CartProduct;
 import com.crutchclothing.inventory.Inventory;
@@ -43,7 +38,6 @@ public class Product implements Serializable  {
 	private Set<OrderLine> orderLines = new HashSet<OrderLine>();
 	private Set<CartProduct> cartProducts = new HashSet<CartProduct>();
 	private Set<Inventory> dailyInventory = new HashSet<Inventory>();
-	private Set<Color> productColors = new HashSet<Color>();
 	private Inventory currentInventory;
 	// TODO setters and getters for todayInventory
 	
@@ -145,7 +139,7 @@ public class Product implements Serializable  {
   this.description = description;
  }
  
- @OneToMany(fetch = FetchType.EAGER, mappedBy = "product", cascade=CascadeType.ALL)
+ @OneToMany(/*fetch = FetchType.EAGER, */mappedBy = "product", cascade=CascadeType.ALL)
  public Set<ProductDetail> getProductDetail() {
 	 return this.productDetails;
  }
@@ -154,7 +148,7 @@ public class Product implements Serializable  {
 	 this.productDetails = productDetails;
  }
  
- @ManyToOne(fetch = FetchType.EAGER)
+ @ManyToOne/*(fetch = FetchType.EAGER)*/
  @JoinColumn(name = "category_id", nullable = false)
  public Category getCategory() {
      return category;
@@ -175,7 +169,7 @@ public class Product implements Serializable  {
  }
  */
  
- @OneToMany(fetch = FetchType.EAGER, mappedBy = "product")
+ @OneToMany(/*fetch = FetchType.EAGER, */mappedBy = "product")
  public Set<OrderLine> getOrderLines() {
 	 return this.orderLines;
  }
@@ -198,7 +192,7 @@ public class Product implements Serializable  {
 	 this.quantity += quantity;
  }
  
- @OneToMany(fetch = FetchType.EAGER, mappedBy = "product")
+ @OneToMany(/*fetch = FetchType.EAGER, */mappedBy = "product")
  public Set<CartProduct> getCartProducts() {
 	 return this.cartProducts;
  }
@@ -206,16 +200,6 @@ public class Product implements Serializable  {
  public void setCartProducts(Set<CartProduct> cartProducts) {
 	 this.cartProducts = cartProducts;
  }
-
- @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "products")
- public Set<Color> getProductColors() {
-	return productColors;
- }
-
- public void setProductColors(Set<Color> productColors) {
-	this.productColors = productColors;
- }
- 
  
  /*
  @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)

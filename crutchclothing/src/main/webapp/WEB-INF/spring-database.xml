@@ -75,7 +75,7 @@
 		
 		<property name="packagesToScan" value="com.crutchclothing" />
 		
-		<!-- 
+		
 		<property name="annotatedClasses">
             <list>
                 <value>com.crutchclothing.cart.model.Cart</value>
@@ -87,16 +87,17 @@
                 <value>com.crutchclothing.products.model.Category</value>
                 <value>com.crutchclothing.products.model.Product</value>
                 <value>com.crutchclothing.products.model.ProductDetail</value>
-                <value>com.crutchclothing.users.model</value>
+                <value>com.crutchclothing.products.model.Size</value>
+                <value>com.crutchclothing.products.model.Color</value>
                 <value>com.crutchclothing.users.model.Address</value>
                 <value>com.crutchclothing.users.model.User</value>
                 <value>com.crutchclothing.users.model.UserRole</value>                
             </list>
         </property>
-		 -->
+		
 	</bean>
 	
-	<bean id="userDao" class="com.crutchclothing.users.dao.UserDaoImpl">
+	<bean id="userDao" class="com.crutchclothing.users.dao.impl.UserDaoImpl">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	

@@ -18,7 +18,7 @@ import javax.persistence.UniqueConstraint;
 import com.crutchclothing.util.CrutchUtils;
 
 @Entity
-@Table(name = "user_roles", catalog = "crutch", uniqueConstraints = @UniqueConstraint(columnNames = { "role", "username" }))
+@Table(name = "user_roles", catalog = "crutch", uniqueConstraints = @UniqueConstraint(columnNames = { "role", "user_id" }))
 public class UserRole implements Serializable{
 
 	/**
@@ -49,8 +49,8 @@ public class UserRole implements Serializable{
 		this.userRoleId = userRoleId;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "username", nullable = false)
+	@ManyToOne/*(fetch = FetchType.EAGER)*/
+	@JoinColumn(name = "user_id", nullable = false)
 	public User getUser() {
 		return this.user;
 	}

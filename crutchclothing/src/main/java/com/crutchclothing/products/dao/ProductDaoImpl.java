@@ -2,25 +2,19 @@ package com.crutchclothing.products.dao;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Expression;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.crutchclothing.cart.model.Cart;
-import com.crutchclothing.cart.model.CartProduct;
-import com.crutchclothing.inventory.Inventory;
-import com.crutchclothing.orders.model.Order;
 import com.crutchclothing.orders.model.OrderLine;
 import com.crutchclothing.products.model.Category;
+import com.crutchclothing.products.model.Color;
 import com.crutchclothing.products.model.Product;
 import com.crutchclothing.products.model.ProductDetail;
-import com.crutchclothing.users.model.User;
+import com.crutchclothing.products.model.ProductStyle;
+import com.crutchclothing.products.model.Size;
 
 @Repository
 public class ProductDaoImpl implements ProductDao {
@@ -203,6 +197,65 @@ public class ProductDaoImpl implements ProductDao {
 		//return criteria.list();
 	}
 	
+	@Override
+	@Transactional
+	@SuppressWarnings("unchecked")
+	public List<Size> getAllSizes() {
+		String hql = "from Size";
+		
+		List<Size> sizes = sessionFactory.getCurrentSession().createQuery(hql).list();
+		if(sizes.size() > 0) {
+			return sizes;
+		}
+		
+		return new ArrayList<Size>();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional
+	public Size getSizeById(int sizeId) {
+		String hql = "from Size where size_id = ?";
+		
+		List<Size> sizes = sessionFactory.getCurrentSession().createQuery(hql).setParameter(0, sizeId).list();
+		
+		Size size = null;
+		if(sizes.size() > 0) {
+			return sizes.get(0);
+		}
+		
+		return null;
+	}
+
+	@Override
+	@Transactional
+	public List<Color> getAllColors() {
+		String hql = "from Color";
+		
+		@SuppressWarnings("unchecked")
+		List<Color> colors = sessionFactory.getCurrentSession().createQuery(hql).list();
+		
+		if(colors.size() > 0) {
+			return colors;
+		}
+		
+		return new ArrayList<Color>();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional
+	public Color getColorById(int colorId) {
+		String hql = "From Color where color_id = ?";
+		
+		List<Color> colors = sessionFactory.getCurrentSession().createQuery(hql).setParameter(0, colorId).list();
+		
+		if(colors.size() > 0) {
+			return colors.get(0);
+		}
+		
+		return null;
+	}
 	
 	@Override
 	@Transactional
@@ -223,10 +276,21 @@ public class ProductDaoImpl implements ProductDao {
 		
 	}
 	
+	@Override
+	@Transactional
+	public void saveProductStyle(ProductStyle productStyle) {
+		sessionFactory.getCurrentSession().saveOrUpdate(productStyle);
+		
+	}
+	
 	
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
+
+	
+
+	
 
 	
 

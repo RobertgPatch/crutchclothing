@@ -42,6 +42,14 @@ public class UserService {
 		return userDao.findByUserName(username);
 	}
 	
+	public User findUserWithCart(String username) {
+		return userDao.findUserByNameWithCart(username);
+	}
+	
+	public User findUserBySessionIdWithCartInfo(String sessionId) {
+		return userDao.getBySessionIdWithCartInfo(sessionId);
+	}
+	
 	
 	public List<User> findAllUsers() {
 		return userDao.findAllUsers();

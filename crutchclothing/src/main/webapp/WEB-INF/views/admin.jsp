@@ -602,9 +602,9 @@
 								<td class="center">${product.price}</td>
 								<td class="center">
 									<c:forEach var="det" items="${product.productDetail}">
-										<c:if test="${det.color }">
+
 										<div style="padding: 5px">${det.size}</div>
-										</c:if>
+
 									</c:forEach>
 								</td>
 								<td class="center">

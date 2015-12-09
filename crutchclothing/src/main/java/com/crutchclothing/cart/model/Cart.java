@@ -6,27 +6,20 @@ import java.math.RoundingMode;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.springframework.format.FormatterRegistry;
-import org.springframework.format.support.FormattingConversionService;
-
-import com.crutchclothing.products.model.Product;
-import com.crutchclothing.products.model.ProductDetail;
 import com.crutchclothing.users.model.User;
+
+
 
 @Entity
 @Table(name = "cart", catalog="crutch")
@@ -102,7 +95,7 @@ public class Cart implements Serializable{
     }
     */
     
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "cart")
+    @OneToMany(/*fetch = FetchType.EAGER, */mappedBy = "cart")
     public Set<CartProduct> getCartProducts() {
      this.total = computeTotal();
    	 return this.cartProducts;
@@ -125,6 +118,7 @@ public class Cart implements Serializable{
     @Transient
     public int getTotalQuantity() {
     	int totalQ = 0;
+    	System.out.println("inside total quan and there are " + cartProducts);
     	for(CartProduct cartProduct : cartProducts) {
     		for(CartProductRef cpr : cartProduct.getCartProductRefs()) {
     		//ProductDetail productDetail = cpr.getProductDetail();	

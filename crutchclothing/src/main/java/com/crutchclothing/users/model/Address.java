@@ -179,7 +179,7 @@ public class Address implements Serializable{
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(name = "user_addresses", 
                 joinColumns = { @JoinColumn(name = "address_id") }, 
-                inverseJoinColumns = { @JoinColumn(name = "username") }) 
+                inverseJoinColumns = { @JoinColumn(name = "user_id") }) 
 	public Set<User> getUsers() {
 		return this.users;
 	}

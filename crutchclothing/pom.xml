@@ -13,6 +13,7 @@
 		<org.aspectj-version>1.6.9</org.aspectj-version>
 		<org.slf4j-version>1.5.10</org.slf4j-version>
 		<spring.security.version>3.2.3.RELEASE</spring.security.version>
+		<spring.session.version>1.0.2.RELEASE</spring.session.version>
 		<mysql.connector.version>5.1.30</mysql.connector.version>
 		<hibernate.version>4.2.6.Final</hibernate.version>
 		<dbcp.version>1.4</dbcp.version>
@@ -126,6 +127,12 @@
 		</dependency>
 		
 		<dependency>
+	        <groupId>org.springframework</groupId>
+	        <artifactId>spring-web</artifactId>
+	        <version>${org.springframework-version}</version>
+        </dependency>
+		
+		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
 			<version>${spring.security.version}</version>
@@ -136,6 +143,13 @@
 			<artifactId>spring-security-config</artifactId>
 			<version>${spring.security.version}</version>
 		</dependency>
+		
+		 <dependency>
+	        <groupId>org.springframework.session</groupId>
+	        <artifactId>spring-session-data-redis</artifactId>
+	        <version>${spring.session.version}</version>
+	        <type>pom</type>
+        </dependency>
 
 		<!-- Spring Security JSP Taglib -->
 		<dependency>

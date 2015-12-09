@@ -10,8 +10,11 @@ import com.crutchclothing.inventory.Inventory;
 import com.crutchclothing.orders.model.OrderLine;
 import com.crutchclothing.products.dao.ProductDao;
 import com.crutchclothing.products.model.Category;
+import com.crutchclothing.products.model.Color;
 import com.crutchclothing.products.model.Product;
 import com.crutchclothing.products.model.ProductDetail;
+import com.crutchclothing.products.model.ProductStyle;
+import com.crutchclothing.products.model.Size;
 
 @Service("productService")
 public class ProductService {
@@ -78,6 +81,25 @@ public class ProductService {
 		productDao.addOrderLineToProduct(orderLine, product);
 	}
 	
+	public List<Color> getAllColors() {
+		return productDao.getAllColors();
+	}
+	
+	public Color getColorById(int colorId) {
+		return productDao.getColorById(colorId);
+	}
+	
+	public List<Size> getAllSizes() {
+		return productDao.getAllSizes();
+	}
+	
+	public Size getSizeByid(int sizeId) {
+		return productDao.getSizeById(sizeId);
+	}
+	
+	public void saveProductStyle(ProductStyle productStyle) {
+		productDao.saveProductStyle(productStyle);
+	}
 	public void setProductDao(ProductDao productDao) {
 		this.productDao = productDao;
 	}

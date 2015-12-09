@@ -26,8 +26,8 @@ public class CartProductDetail implements Serializable  {
 	private static final long serialVersionUID = 1L;
 	
 	private Integer id; // primary key
-	private String size;
-	private String color;
+	//private String size;
+	//private String color;
 	private int quantity;
 	private String name;
 	private CartProduct cartProduct;
@@ -36,16 +36,16 @@ public class CartProductDetail implements Serializable  {
  public CartProductDetail() {
  }
 
- public CartProductDetail(CartProduct cartProduct, String size, String color, int quantity) 
+ public CartProductDetail(CartProduct cartProduct/*, String size*/, String color, int quantity) 
  {
   this.cartProduct = cartProduct;
-  this.size = size;
+  //this.size = size;
   this.quantity = quantity;
  }
  
  public CartProductDetail(CartProduct cartProduct, ProductDetail productDetail) {
 	 this.cartProduct = cartProduct;
-	 this.size = productDetail.getSize();
+	 //this.size = productDetail.getSize();
 	 this.quantity = productDetail.getQuantity();
 	 this.name = cartProduct.getProduct().getName();
  }
@@ -63,6 +63,7 @@ public class CartProductDetail implements Serializable  {
  }
  
 
+ /*
  @Column(name="cart_product_size", nullable = false)
  public String getSize() {
 	 return this.size;
@@ -71,6 +72,7 @@ public class CartProductDetail implements Serializable  {
  public void setSize(String size) {
 	 this.size = size;
  }
+ */
  
  @Column(name="cart_product_quantity", nullable = true)
  public int getQuantity() {

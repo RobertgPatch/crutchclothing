@@ -141,7 +141,7 @@ public class CartProduct implements Serializable {
 		this.cartProductId = cartProductId;
 	}
 	
-	@ManyToOne
+	@ManyToOne(/*fetch = FetchType.EAGER*/)
 	@JoinColumn(name = "product_id")
 	public Product getProduct() {
 		return this.product;
@@ -151,7 +151,7 @@ public class CartProduct implements Serializable {
 		this.product = product;
 	}
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cart_id")
 	public Cart getCart() {
 		return this.cart;
@@ -194,7 +194,7 @@ public class CartProduct implements Serializable {
 	}
 	*/
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "cartProduct", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy = "cartProduct", cascade=CascadeType.ALL)
 	public Set<CartProductRef> getCartProductRefs() {
 		return this.cartProductRefs;
 	}

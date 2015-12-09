@@ -2,13 +2,12 @@
 
 	import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,15 +15,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.crutchclothing.cart.model.CartProduct;
 import com.crutchclothing.cart.model.CartProductRef;
 import com.crutchclothing.inventory.Inventory;
-import com.crutchclothing.users.model.Address;
-import com.crutchclothing.users.model.User;
 
 
 	@Entity
@@ -35,11 +30,12 @@ import com.crutchclothing.users.model.User;
 		
 		private Integer id; // primary key
 		//private String size;
-		private String size;
+		//private String size;
 		private int quantity;
 		private Product product;
-		private Inventory currentInventory;
+		private int totalInventory;
 		private Set<Inventory> dailyInventory;
+		//private Set<Color> productDetailColors;
 		private Set<CartProductRef> cartProductRefs = new HashSet<CartProductRef>(0);
 		
 		/*
@@ -58,27 +54,28 @@ import com.crutchclothing.users.model.User;
 	 public ProductDetail() {
 	 }
 
-	 public ProductDetail(Product product, String size, int quantity) 
+	 public ProductDetail(Product product/*, String size*/, int quantity) 
 	 {
 	  this.product = product;
-	  this.size = size;
+	  //this.size = size;
 	  this.quantity = quantity;
 	 }
 	 
-	 public ProductDetail(Product product, Set<CartProductRef> cartProductRefs, String size, 
+	 public ProductDetail(Product product, Set<CartProductRef> cartProductRefs/*, String size*/, 
 			 int quantity) 
 	 {
 	  this.product = product;
 	  this.cartProductRefs = cartProductRefs;
-	  this.size = size;
+	  //this.size = size;
 	  this.quantity = quantity;
 	 }
 	 
+	 /*
 	 public ProductDetail(String size) 
 	 {
 	  this.size = size;
 	 }
-
+	 */
 
 	 @Id
 	 @GeneratedValue
@@ -91,6 +88,7 @@ import com.crutchclothing.users.model.User;
 	 	this.id = id;
 	 }
 	 
+	 /*
 	 @Column(name="size", nullable = false)
 	 public String getSize() {
 		 return this.size;
@@ -98,7 +96,8 @@ import com.crutchclothing.users.model.User;
 	 
 	 public void setSize(String size) {
 		 this.size = size;
-	 }	 
+	 }	
+	 */ 
 	
 	 //@Column(name="product_quantity", nullable = true)
 	 @Transient
@@ -143,17 +142,24 @@ import com.crutchclothing.users.model.User;
 	 }
 	 
 	 @Transient
-	 public Inventory getCurrentInventory() {
-		if(dailyInventory == null) {
-			return null;
+	 public int getTotalInventory() {
+		 
+		if(dailyInventory.isEmpty() || dailyInventory == null) {
+			return 0;
 		}
-		currentInventory = dailyInventory.iterator().next();
+		int total = 0;
+		Iterator<Inventory> it = dailyInventory.iterator();
 		
-		return currentInventory;
+		while(it.hasNext()) {
+			total += it.next().getInventoryAmount();
+		}
+		
+		totalInventory = total;
+		return totalInventory;
 	 }
 
-	 public void setCurrentInventory(Inventory currentInventory) {
-		this.currentInventory = currentInventory;
+	 public void setTotalInventory(int totalInventory) {
+		this.totalInventory = totalInventory;
 	 }
 
 	 @OneToMany(fetch = FetchType.EAGER, mappedBy = "productDetail")
@@ -165,5 +171,15 @@ import com.crutchclothing.users.model.User;
 		 this.dailyInventory = dailyInventory;
 	 }
 	 
+	 /*
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "productDetails")
+	public Set<Color> getProductDetailColors() {
+		return productDetailColors;
+	}
+
+	public void setProductDetailColors(Set<Color> productDetailColors) {
+		this.productDetailColors = productDetailColors;
+	}
+	*/
 
 	}

@@ -131,7 +131,7 @@ public class Order implements Serializable{
 	
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "username", nullable = false) 
+	@JoinColumn(name = "user_id", nullable = false) 
 	public User getUser() {
 		return this.user;
 	}

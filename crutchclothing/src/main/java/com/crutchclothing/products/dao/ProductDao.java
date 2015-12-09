@@ -3,11 +3,13 @@ package com.crutchclothing.products.dao;
 import java.util.List;
 
 import com.crutchclothing.cart.model.Cart;
-import com.crutchclothing.inventory.Inventory;
 import com.crutchclothing.orders.model.OrderLine;
 import com.crutchclothing.products.model.Category;
+import com.crutchclothing.products.model.Color;
 import com.crutchclothing.products.model.Product;
 import com.crutchclothing.products.model.ProductDetail;
+import com.crutchclothing.products.model.ProductStyle;
+import com.crutchclothing.products.model.Size;
 
 public interface ProductDao {
 	
@@ -38,5 +40,15 @@ public interface ProductDao {
 	void addCategoryToProduct(Product product, Category cat);
 	
 	void addOrderLineToProduct(OrderLine orderLine, Product product);
+	
+	List<Size> getAllSizes();
+	
+	Size getSizeById(int sizeId);
+	
+	List<Color> getAllColors();
+	
+	Color getColorById(int colorId);
+	
+	void saveProductStyle(ProductStyle productStyle);
 
 }
